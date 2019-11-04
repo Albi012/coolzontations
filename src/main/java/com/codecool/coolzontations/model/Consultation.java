@@ -23,4 +23,16 @@ public class Consultation {
     }
 
 
+    @Override
+    public String toString() {
+        return "Consultation{" +
+                "date='" + date + '\'' +
+                ", duration=" + duration +
+                ", subjects=" + subjects +
+                ", host=" + host +
+                ", participants=" + participants +
+                ", participantLimit=" + participantLimit +
+                ", description='" + description + '\'' +
+                '}';
+    }
 }
