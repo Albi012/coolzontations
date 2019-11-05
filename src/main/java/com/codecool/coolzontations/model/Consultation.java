@@ -4,6 +4,9 @@ import java.util.Set;
 
 public class Consultation {
 
+    private static int counter;
+
+    private int id;
     private String date;
     private int duration;
     private Set<Subject> subjects;
@@ -13,6 +16,7 @@ public class Consultation {
     private String description;
 
     public Consultation(String date, int duration, Set<Subject> subjects, User host, Set<User> participants, int participantLimit, String description) {
+        this.id = counter++;
         this.date = date;
         this.duration = duration;
         this.subjects = subjects;
