@@ -31,9 +31,13 @@ public class DataInitializer {
 
         Set<Subject> subjects = new HashSet<>(Arrays.asList(Subject.JAVA, Subject.JAVASCRIPT, Subject.REACT));
         Set<User> participants = new HashSet<>(Arrays.asList(user2, user3));
-        Consultation c = new Consultation("Ma", 30, subjects, user1, participants, 3, "apacuka fundaluka");
+        Consultation c1 = new Consultation("Ma", 30, subjects, user1, participants, 3, "apacuka fundaluka");
+        Consultation c2 = new Consultation("Holnap", 90, subjects, user2, participants, 1, "fundakave kamanduka");
+        Consultation c3 = new Consultation("Kedd", 120, subjects, user3, participants, 2, "ap cuk fundaluk funda kave kamanduk");
 
-        consultationStorage.addConsultation(c);
+        consultationStorage.addConsultation(c1);
+        consultationStorage.addConsultation(c2);
+        consultationStorage.addConsultation(c3);
 
     }
 

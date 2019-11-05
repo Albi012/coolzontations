@@ -14,6 +14,10 @@ public class User {
         this.id = counter++;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public String getUsername() {
         return username;
     }
