@@ -26,6 +26,10 @@ public class Consultation {
         this.description = description;
     }
 
+    public int getId() {
+        return id;
+    }
+
     public User getHost() {
         return host;
     }

@@ -1,31 +1,28 @@
-package com.codecool.coolzontations.controller;
+package com.codecool.coolzontations.repository;
 
 import com.codecool.coolzontations.model.Consultation;
 import com.codecool.coolzontations.model.User;
 import com.codecool.coolzontations.service.ConsultationStorage;
 import com.codecool.coolzontations.service.UserStorage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@RestController
-public class RouteConctroller {
+@Component
+public class DataManager {
 
     @Autowired
     private UserStorage userStorage;
     @Autowired
     private ConsultationStorage consultationStorage;
 
-    @GetMapping("/consultations")
-    public List<Consultation> consultations(){
+    public List<Consultation> getConsultations(){
         return consultationStorage.getConsultations();
 
     }
 
-    @GetMapping("/users")
-    public List<User> users(){
+    public List<User> getUsers(){
         return userStorage.getUsers();
 
     }

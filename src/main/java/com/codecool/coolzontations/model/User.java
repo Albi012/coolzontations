@@ -22,7 +22,7 @@ public class User {
         return username;
     }
 
-    public Level getLevel() {
-        return level;
+    public int getLevel() {
+        return level.getLevel();
     }
 }
