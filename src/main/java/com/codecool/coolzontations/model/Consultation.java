@@ -22,6 +22,13 @@ public class Consultation {
         this.description = description;
     }
 
+    public User getHost() {
+        return host;
+    }
+
+    public Set<User> getParticipants() {
+        return participants;
+    }
 
     @Override
     public String toString() {

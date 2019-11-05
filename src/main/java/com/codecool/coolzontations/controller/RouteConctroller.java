@@ -1,5 +1,6 @@
 package com.codecool.coolzontations.controller;
 
+import com.codecool.coolzontations.model.Consultation;
 import com.codecool.coolzontations.model.User;
 import com.codecool.coolzontations.service.ConsultationStorage;
 import com.codecool.coolzontations.service.UserStorage;
@@ -17,8 +18,14 @@ public class RouteConctroller {
     @Autowired
     private ConsultationStorage consultationStorage;
 
-    @GetMapping("/")
-    public List<User> home(){
+    @GetMapping("/consultations")
+    public List<Consultation> consultations(){
+        return consultationStorage.getConsultations();
+
+    }
+
+    @GetMapping("/users")
+    public List<User> users(){
         return userStorage.getUsers();
 
     }
