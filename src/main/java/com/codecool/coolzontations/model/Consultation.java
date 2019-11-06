@@ -58,6 +58,15 @@ public class Consultation {
         return description;
     }
 
+    public boolean addParticipant(User user) {
+        if (participants.size()<participantLimit) {
+            this.participants.add(user);
+            return true;
+        }
+        //TODO: add exception
+        return false;
+    }
+
     @Override
     public String toString() {
         return "Consultation{" +

@@ -17,14 +17,15 @@ public class DataManager {
     @Autowired
     private ConsultationStorage consultationStorage;
 
-    public List<Consultation> getConsultations(){
+    public List<Consultation> getConsultations() {
         return consultationStorage.getConsultations();
-
     }
 
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         return userStorage.getUsers();
-
     }
 
+    public void joinConsultation(User user, Consultation consultation) {
+        consultation.addParticipant(user);
+    }
 }

@@ -4,9 +4,7 @@ import com.codecool.coolzontations.model.Consultation;
 import com.codecool.coolzontations.model.User;
 import com.codecool.coolzontations.repository.DataManager;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -20,15 +18,17 @@ public class RouteController {
     @GetMapping("/consultations")
     public List<Consultation> consultations(){
         return dataManager.getConsultations();
-
     }
 
     @GetMapping("/users")
     public List<User> users(){
         return dataManager.getUsers();
-
     }
 
+    @PostMapping("/joinConsultation")
+    public void addParticipantToConsultation(@RequestBody User user, @RequestBody Consultation consultation) {
+        dataManager.joinConsultation(user, consultation);
+    }
 
 
 }
