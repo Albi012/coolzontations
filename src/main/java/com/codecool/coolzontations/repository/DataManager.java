@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 public class DataManager {
@@ -25,7 +26,13 @@ public class DataManager {
         return userStorage.getUsers();
     }
 
-    public void joinConsultation(User user, Consultation consultation) {
+    public void joinConsultation(Integer userID, Integer consultationID) {
+        User user = userStorage.getUserByID(userID);
+        Consultation consultation = consultationStorage.getConsultationByID(consultationID);
         consultation.addParticipant(user);
     }
+
+    public List<Consultation> getMyConsultations(int userID) {
+        return consultationStorage.getConsultations().stream()
+                .filter(consultation -> consultation.findUser(userID)).collect(Collectors.toList()); }
 }

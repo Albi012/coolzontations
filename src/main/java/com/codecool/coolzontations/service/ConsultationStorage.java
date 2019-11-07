@@ -20,4 +20,12 @@ public class ConsultationStorage {
     public List<Consultation> getConsultations() {
         return consultations;
     }
+
+    public Consultation getConsultationByID(Integer id){
+        Optional<Consultation> foundConsultation = consultations.stream().filter(user -> user.getId()==id).findFirst();
+        return foundConsultation.orElseThrow();
+
+    }
 }
+
+

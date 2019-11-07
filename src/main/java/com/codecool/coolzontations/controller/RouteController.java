@@ -1,7 +1,7 @@
 package com.codecool.coolzontations.controller;
 
 import com.codecool.coolzontations.model.Consultation;
-import com.codecool.coolzontations.model.JoinData;
+import com.codecool.coolzontations.model.DataFromRequest;
 import com.codecool.coolzontations.model.User;
 import com.codecool.coolzontations.repository.DataManager;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -31,8 +31,8 @@ public class RouteController {
     @PostMapping("/joinConsultation")
     public void addParticipantToConsultation(@RequestBody String string ) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
-        JoinData joinData = objectMapper.readValue(string, JoinData.class);
-        dataManager.joinConsultation(joinData.getUserID(), joinData.getConsultationID());
+        DataFromRequest dataFromRequest = objectMapper.readValue(string, DataFromRequest.class);
+        dataManager.joinConsultation(dataFromRequest.getUserID(), dataFromRequest.getConsultationID());
     }
 
     @GetMapping("/myConsultations/{id}")

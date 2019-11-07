@@ -8,10 +8,10 @@ public class Consultation {
 
     private int id;
     private String date;
-    private int duration;
     private Set<Subject> subjects;
     private User host;
     private Set<User> participants;
+    private int duration;
     private int participantLimit;
     private String description;
 
@@ -56,6 +56,15 @@ public class Consultation {
 
     public String getDescription() {
         return description;
+    }
+
+    public boolean findUser(int id) {
+        for (User participant : this.getParticipants()) {
+            if (participant.getId() == id){
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean addParticipant(User user) {
