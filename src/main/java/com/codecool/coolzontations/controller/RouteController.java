@@ -37,7 +37,6 @@ public class RouteController {
 
     @GetMapping("/myConsultations/{id}")
     public List<Consultation> myConsultations(@PathVariable("id") Integer id){
-        System.out.println("id: " + id);
         return dataManager.getMyConsultations(id);
 
     }

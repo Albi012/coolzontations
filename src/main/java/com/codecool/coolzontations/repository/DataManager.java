@@ -7,6 +7,7 @@ import com.codecool.coolzontations.service.UserStorage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,6 +34,14 @@ public class DataManager {
     }
 
     public List<Consultation> getMyConsultations(int userID) {
-        return consultationStorage.getConsultations().stream()
-                .filter(consultation -> consultation.findUser(userID)).collect(Collectors.toList()); }
+        User user = userStorage.getUserByID(userID);
+        List<Consultation> myConsultations = new ArrayList<>();
+        for (Consultation consultation : consultationStorage.getConsultations()) {
+            if(consultation.getParticipants().contains(user)){
+                myConsultations.add(consultation);
+            }
+        }
+        return myConsultations;
+    }
+
 }
