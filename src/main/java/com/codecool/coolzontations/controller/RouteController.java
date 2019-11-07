@@ -1,11 +1,13 @@
 package com.codecool.coolzontations.controller;
 
 import com.codecool.coolzontations.model.Consultation;
+import com.codecool.coolzontations.model.JoinData;
 import com.codecool.coolzontations.model.User;
 import com.codecool.coolzontations.repository.DataManager;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @CrossOrigin
@@ -25,9 +27,19 @@ public class RouteController {
         return dataManager.getUsers();
     }
 
+
     @PostMapping("/joinConsultation")
-    public void addParticipantToConsultation(@RequestBody User user, @RequestBody Consultation consultation) {
-        dataManager.joinConsultation(user, consultation);
+    public void addParticipantToConsultation(@RequestBody String string ) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        JoinData joinData = objectMapper.readValue(string, JoinData.class);
+        dataManager.joinConsultation(joinData.getUserID(), joinData.getConsultationID());
+    }
+
+    @GetMapping("/myConsultations/{id}")
+    public List<Consultation> myConsultations(@PathVariable("id") Integer id){
+        System.out.println("id: " + id);
+        return dataManager.getMyConsultations(id);
+
     }
 
 
