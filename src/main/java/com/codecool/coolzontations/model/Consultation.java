@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -23,6 +25,7 @@ public class Consultation {
 
     @Id
     @GeneratedValue
+    @Column(name = "consultation_id")
     private int id;
 
     @Column(nullable = false)
@@ -33,10 +36,12 @@ public class Consultation {
     private Set<Subject> subjects;
 
     @ManyToOne
+    @EqualsAndHashCode.Exclude
+    @JoinTable(name = "hosted_consultations")
     private User host;
 
-    @Singular
     @ManyToMany(mappedBy = "consultationAsParticipant", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @EqualsAndHashCode.Exclude
     private Set<User> participants;
 
     @Column(nullable = false)
@@ -50,7 +55,7 @@ public class Consultation {
 
     public boolean findUser(int id) {
         for (User participant : this.getParticipants()) {
-            if (participant.getId() == id){
+            if (participant.getId() == id) {
                 return true;
             }
         }
@@ -58,12 +63,15 @@ public class Consultation {
     }
 
     public boolean addParticipant(User user) {
-        if (participants.size()<participantLimit) {
-            this.participants.add(user);
-            return true;
+        if (this.participants == null) {
+            this.participants = new HashSet<>();
         }
-        //TODO: add exception
-        return false;
+        if (user.getConsultationAsParticipant() == null) {
+            user.setConsultationAsParticipant(new HashSet<>());
+        }
+        this.participants.add(user);
+        user.getConsultationAsParticipant().add(this);
+        return true;
     }
 
 }

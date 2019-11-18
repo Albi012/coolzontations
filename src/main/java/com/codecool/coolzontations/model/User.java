@@ -1,12 +1,9 @@
 package com.codecool.coolzontations.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Null;
+import java.util.HashSet;
 import java.util.Set;
 
 @Builder
@@ -27,10 +24,21 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Level level;
 
-    @OneToMany(mappedBy = "host", cascade = {CascadeType.PERSIST})
-    private Set<Consultation> consultationAsHost;
+    @OneToMany(mappedBy = "host")
+    @EqualsAndHashCode.Exclude
+    private Set<Consultation> hostedConsultations;
 
     @ManyToMany
     private Set<Consultation> consultationAsParticipant;
+
+
+    public void addConsultation(Consultation c){
+        if(this.hostedConsultations == null){
+            this.hostedConsultations = new HashSet<>();
+        }
+        c.setHost(this);
+        this.hostedConsultations.add(c);
+    }
+
 
 }
