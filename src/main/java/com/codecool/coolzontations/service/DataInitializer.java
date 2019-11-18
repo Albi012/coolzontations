@@ -26,10 +26,22 @@ public class DataInitializer {
 
     @PostConstruct
     private void dummyInit() {
-        User user1 = new User("Jancsi", Level.ADVANCE);
-        User user2 = new User("Gyula", Level.PROGBASICS);
-        User user3 = new User("Karcsi", Level.WEB);
-        User user4 = new User("myUser", Level.WEB);
+        User user1 = User.builder()
+                .username("Jancsi")
+                .level(Level.ADVANCE)
+                .build();
+        User user2 = User.builder()
+                .username("Gyula")
+                .level(Level.PROGBASICS)
+                .build();
+        User user3 = User.builder()
+                .username("Karcsi")
+                .level(Level.WEB)
+                .build();
+        User user4 = User.builder()
+                .username("myUser")
+                .level(Level.WEB)
+                .build();
         userStorage.addUser(user1);
         userStorage.addUser(user2);
         userStorage.addUser(user3);
@@ -38,9 +50,33 @@ public class DataInitializer {
         Set<Subject> subjects = new HashSet<>(Arrays.asList(Subject.JAVA, Subject.JAVASCRIPT, Subject.REACT));
         Set<User> participants = new HashSet<>(Arrays.asList(user2, user3));
         Set<User> participants2 = new HashSet<>(Arrays.asList(user2, user1));
-        Consultation c1 = new Consultation("Ma", 30, subjects, user1, participants, 3, "apacuka fundaluka");
-        Consultation c2 = new Consultation("Holnap", 90, subjects, user2, participants, 1, "fundakave kamanduka");
-        Consultation c3 = new Consultation("Kedd", 120, subjects, user3, participants2, 2, "ap cuk fundaluk funda kave kamanduk");
+        Consultation c1 = Consultation.builder()
+                .date("Ma")
+                .duration(30)
+                .host(user1)
+                .subjects(subjects)
+                .participants(participants)
+                .participantLimit(3)
+                .description("apacuka fundaluka")
+                .build();
+        Consultation c2 = Consultation.builder()
+                .date("Holnap")
+                .duration(90)
+                .subjects(subjects)
+                .host(user2)
+                .participants(participants)
+                .participantLimit(1)
+                .description("fundakave")
+                .build();
+        Consultation c3 = Consultation.builder()
+                .date("Kedd")
+                .duration(120)
+                .subjects(subjects)
+                .host(user3)
+                .participants(participants2)
+                .participantLimit(2)
+                .description("ap cuk fundaluk funda kave kamanduk")
+                .build();
 
         consultationStorage.addConsultation(c1);
         consultationStorage.addConsultation(c2);
