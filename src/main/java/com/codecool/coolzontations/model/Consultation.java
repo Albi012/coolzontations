@@ -4,6 +4,14 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import java.util.Set;
 
 @Entity
@@ -40,48 +48,6 @@ public class Consultation {
     @Column(nullable = false)
     private String description;
 
-    public Consultation(LocalDate date, int duration, Set<Subject> subjects, User host, Set<User> participants, int participantLimit, String description) {
-        this.date = date;
-        this.duration = duration;
-        this.subjects = subjects;
-        this.host = host;
-        this.participants = participants;
-        this.participantLimit = participantLimit;
-        this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public User getHost() {
-        return host;
-    }
-
-    public Set<User> getParticipants() {
-        return participants;
-    }
-
-//    public String getDate() {
-//        return date;
-//    }
-
-    public int getDuration() {
-        return duration;
-    }
-
-    public Set<Subject> getSubjects() {
-        return subjects;
-    }
-
-    public int getParticipantLimit() {
-        return participantLimit;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
     public boolean findUser(int id) {
         for (User participant : this.getParticipants()) {
             if (participant.getId() == id){
@@ -100,16 +66,4 @@ public class Consultation {
         return false;
     }
 
-    @Override
-    public String toString() {
-        return "Consultation{" +
-                "date='" + date + '\'' +
-                ", duration=" + duration +
-                ", subjects=" + subjects +
-                ", host=" + host +
-                ", participants=" + participants +
-                ", participantLimit=" + participantLimit +
-                ", description='" + description + '\'' +
-                '}';
-    }
 }

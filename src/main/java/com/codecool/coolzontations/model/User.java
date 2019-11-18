@@ -4,12 +4,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Null;
 import java.util.Set;
-
 
 @Builder
 @Data
@@ -17,6 +15,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 public class User {
+
 
     @Id
     @GeneratedValue
@@ -34,20 +33,4 @@ public class User {
     @ManyToMany
     private Set<Consultation> consultationAsParticipant;
 
-    public User(String username, Level level) {
-        this.username = username;
-        this.level = level;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public int getLevel() {
-        return level.getLevel();
-    }
 }
