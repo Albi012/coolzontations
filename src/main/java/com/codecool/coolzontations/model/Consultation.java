@@ -1,22 +1,46 @@
 package com.codecool.coolzontations.model;
 
+import lombok.*;
+
+import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Set;
 
+@Entity
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Data
 public class Consultation {
 
-    private static int counter;
-
+    @Id
+    @GeneratedValue
     private int id;
-    private String date;
+
+    @Column(nullable = false)
+    private LocalDate date;
+
+    @Singular
+    @ElementCollection
     private Set<Subject> subjects;
+
+    @ManyToOne
     private User host;
+
+    @Singular
+    @ManyToMany(mappedBy = "consultationAsParticipant", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     private Set<User> participants;
-    private int duration;
-    private int participantLimit;
+
+    @Column(nullable = false)
+    private Integer duration;
+
+    @Column(nullable = false)
+    private Integer participantLimit;
+
+    @Column(nullable = false)
     private String description;
 
-    public Consultation(String date, int duration, Set<Subject> subjects, User host, Set<User> participants, int participantLimit, String description) {
-        this.id = counter++;
+    public Consultation(LocalDate date, int duration, Set<Subject> subjects, User host, Set<User> participants, int participantLimit, String description) {
         this.date = date;
         this.duration = duration;
         this.subjects = subjects;
@@ -38,9 +62,9 @@ public class Consultation {
         return participants;
     }
 
-    public String getDate() {
-        return date;
-    }
+//    public String getDate() {
+//        return date;
+//    }
 
     public int getDuration() {
         return duration;
