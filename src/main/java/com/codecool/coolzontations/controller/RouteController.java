@@ -29,9 +29,7 @@ public class RouteController {
 
 
     @PostMapping("/joinConsultation")
-    public void addParticipantToConsultation(@RequestBody String string ) throws JsonProcessingException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        DataFromRequest dataFromRequest = objectMapper.readValue(string, DataFromRequest.class);
+    public void addParticipantToConsultation(@RequestBody DataFromRequest dataFromRequest) throws JsonProcessingException {
         dataManager.joinConsultation(dataFromRequest.getUserID(), dataFromRequest.getConsultationID());
     }
 

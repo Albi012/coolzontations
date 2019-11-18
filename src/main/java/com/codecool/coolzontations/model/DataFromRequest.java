@@ -2,7 +2,6 @@ package com.codecool.coolzontations.model;
 
 import org.springframework.stereotype.Component;
 
-@Component
 public class DataFromRequest {
 
     private Integer userID;
