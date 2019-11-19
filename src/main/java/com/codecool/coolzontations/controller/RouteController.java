@@ -35,6 +35,13 @@ public class RouteController {
         dataManager.joinConsultation(dataFromRequest.getUserID(), dataFromRequest.getConsultationID());
     }
 
+    @PostMapping("/dropConsultation")
+    public void removeParticipantFromConsultation(@RequestBody String string ) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        DataFromRequest dataFromRequest = objectMapper.readValue(string, DataFromRequest.class);
+        dataManager.dropConsultation(dataFromRequest.getUserID(), dataFromRequest.getConsultationID());
+    }
+
     @GetMapping("/myConsultations/{id}")
     public List<Consultation> myConsultations(@PathVariable("id") Integer id){
         return dataManager.getMyConsultations(id);
