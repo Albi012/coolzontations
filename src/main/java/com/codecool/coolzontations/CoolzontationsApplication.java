@@ -5,6 +5,7 @@ import com.codecool.coolzontations.model.Level;
 import com.codecool.coolzontations.model.Subject;
 import com.codecool.coolzontations.model.User;
 import com.codecool.coolzontations.repository.ConsultationRepository;
+import com.codecool.coolzontations.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -22,6 +23,9 @@ public class CoolzontationsApplication {
 
     @Autowired
     private ConsultationRepository consultationRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public static void main(String[] args) {
         SpringApplication.run(CoolzontationsApplication.class, args);
@@ -54,20 +58,19 @@ public class CoolzontationsApplication {
                     .date(LocalDateTime.now())
                     .duration(30)
                     .subjects(subjects)
-                    .participantLimit(3)
+                    .participantLimit(4)
                     .description("apacuka fundaluka")
                     .build();
 
             user1.addConsultation(c1);
             c1.addParticipant(user3);
             c1.addParticipant(user2);
-            c1.addParticipant(user4);
 
             Consultation c2 = Consultation.builder()
                     .date(LocalDateTime.of(1990, 12, 21, 10, 10))
                     .duration(90)
                     .subjects(subjects)
-                    .participantLimit(1)
+                    .participantLimit(7)
                     .description("fundakave")
                     .build();
 
@@ -79,7 +82,7 @@ public class CoolzontationsApplication {
                     .date(LocalDateTime.of(2019, 11, 25, 12, 30))
                     .duration(120)
                     .subjects(subjects)
-                    .participantLimit(2)
+                    .participantLimit(4)
                     .description("ap cuk fundaluk funda kave kamanduk")
                     .build();
 
@@ -88,6 +91,7 @@ public class CoolzontationsApplication {
             c3.addParticipant(user2);
 
             consultationRepository.saveAll(Arrays.asList(c1, c2, c3));
+            userRepository.save(user4);
 
         };
     }
