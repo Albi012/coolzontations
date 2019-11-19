@@ -43,4 +43,8 @@ public class Consultation {
         return false;
     }
 
+    public void removeParticipant(User user) {
+        this.participants.remove(user);
+    }
+
 }
