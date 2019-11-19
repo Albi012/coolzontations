@@ -1,5 +1,12 @@
 package com.codecool.coolzontations.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import lombok.*;
+
+import javax.persistence.*;
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -8,26 +15,55 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
-@Data
+@Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Data
 public class Consultation {
 
-    private int id;
-    private String date;
+    @Id
+    @GeneratedValue
+    @Column(name = "consultationID")
+    private Long id;
+
+    @Column(nullable = false)
+    private LocalDateTime date;
+
+    @Singular
+    @ElementCollection
     private Set<Subject> subjects;
+
+    @ManyToOne
+    @EqualsAndHashCode.Exclude
+    @JoinTable(name = "hosted_consultations")
+    @JsonManagedReference
     private User host;
+
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinTable(name =  "user_consultation_as_participant",
+            joinColumns = {@JoinColumn(name = "consultationID")},
+            inverseJoinColumns = { @JoinColumn(name = "userID")})
+    @JsonManagedReference
     private Set<User> participants;
-    private int duration;
-    private int participantLimit;
+
+    @Column(nullable = false)
+    private Integer duration;
+
+    @Column(nullable = false)
+    private Integer participantLimit;
+
+    @Column(nullable = false)
     private String description;
 
     public boolean findUser(int id) {
         for (User participant : this.getParticipants()) {
-            if (participant.getId() == id){
+            if (participant.getId() == id) {
                 return true;
             }
         }
@@ -35,12 +71,15 @@ public class Consultation {
     }
 
     public boolean addParticipant(User user) {
-        if (participants.size()<participantLimit) {
-            this.participants.add(user);
-            return true;
+        if (this.participants == null) {
+            this.participants = new HashSet<>();
         }
-        //TODO: add exception
-        return false;
+        if (user.getConsultationAsParticipant() == null) {
+            user.setConsultationAsParticipant(new HashSet<>());
+        }
+        this.participants.add(user);
+        user.getConsultationAsParticipant().add(this);
+        return true;
     }
 
     public void removeParticipant(User user) {
