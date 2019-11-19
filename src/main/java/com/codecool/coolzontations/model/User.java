@@ -1,7 +1,6 @@
 package com.codecool.coolzontations.model;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -29,12 +28,14 @@ public class User {
 
     @OneToMany(mappedBy = "host")
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @JsonBackReference
     private Set<Consultation> hostedConsultations;
 
     @ManyToMany(mappedBy = "participants")
     @EqualsAndHashCode.Exclude
     @JsonBackReference
+    @ToString.Exclude
     private Set<Consultation> consultationAsParticipant;
 
 

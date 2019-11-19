@@ -40,6 +40,7 @@ public class Consultation {
 
     @ManyToOne
     @EqualsAndHashCode.Exclude
+    @ToString.Exclude
     @JoinTable(name = "hosted_consultations")
     @JsonManagedReference
     private User host;
@@ -50,6 +51,7 @@ public class Consultation {
             joinColumns = {@JoinColumn(name = "consultationID")},
             inverseJoinColumns = { @JoinColumn(name = "userID")})
     @JsonManagedReference
+    @ToString.Exclude
     private Set<User> participants;
 
     @Column(nullable = false)
