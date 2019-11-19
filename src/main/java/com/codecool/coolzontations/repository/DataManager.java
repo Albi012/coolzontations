@@ -33,6 +33,12 @@ public class DataManager {
         consultation.addParticipant(user);
     }
 
+    public void dropConsultation(Integer userID, Integer consultationID) {
+        User user = userStorage.getUserByID(userID);
+        Consultation consultation = consultationStorage.getConsultationByID(consultationID);
+        consultation.removeParticipant(user);
+    }
+
     public List<Consultation> getMyConsultations(int userID) {
         User user = userStorage.getUserByID(userID);
         List<Consultation> myConsultations = new ArrayList<>();
