@@ -1,6 +1,7 @@
 package com.codecool.coolzontations.controller;
 
 import com.codecool.coolzontations.model.Consultation;
+import com.codecool.coolzontations.model.ConsultationDataFromRequest;
 import com.codecool.coolzontations.model.DataFromRequest;
 import com.codecool.coolzontations.model.User;
 import com.codecool.coolzontations.repository.ConsultationRepository;
@@ -60,6 +61,20 @@ public class RouteController {
             }
         }
         return false;
+    }
+
+    @PostMapping("/createNewConsultation")
+    public void createNewConsultation(@RequestBody ConsultationDataFromRequest c){
+        Consultation consultation = Consultation.builder()
+                .date(c.getDate())
+                .subjects(c.getSubjects())
+                .host(c.getHost())
+                .duration(c.getDuration())
+                .participantLimit(c.getParticipantLimit())
+                .description(c.getDescription())
+                .build();
+        consultationRepository.save(consultation);
+
     }
 
     @GetMapping("/myConsultations/{id}")
