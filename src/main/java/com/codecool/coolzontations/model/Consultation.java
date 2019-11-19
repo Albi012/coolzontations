@@ -1,5 +1,7 @@
 package com.codecool.coolzontations.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -13,6 +15,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -25,11 +28,11 @@ public class Consultation {
 
     @Id
     @GeneratedValue
-    @Column(name = "consultation_id")
-    private int id;
+    @Column(name = "consultationID")
+    private Long id;
 
     @Column(nullable = false)
-    private LocalDate date;
+    private LocalDateTime date;
 
     @Singular
     @ElementCollection
@@ -38,10 +41,15 @@ public class Consultation {
     @ManyToOne
     @EqualsAndHashCode.Exclude
     @JoinTable(name = "hosted_consultations")
+    @JsonManagedReference
     private User host;
 
-    @ManyToMany(mappedBy = "consultationAsParticipant", cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
-    @EqualsAndHashCode.Exclude
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @JoinTable(name =  "user_consultation_as_participant",
+            joinColumns = {@JoinColumn(name = "consultationID")},
+            inverseJoinColumns = { @JoinColumn(name = "userID")})
+    @JsonManagedReference
     private Set<User> participants;
 
     @Column(nullable = false)

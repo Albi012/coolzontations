@@ -2,18 +2,18 @@ package com.codecool.coolzontations.model;
 
 public enum Level {
 
-    PROGBASICS(1),
-    WEB(2),
-    OOP(3),
-    ADVANCE(4);
+    PROGBASICS(1L),
+    WEB(2L),
+    OOP(3L),
+    ADVANCE(4L);
 
-    private int level;
+    private Long level;
 
-    Level(int level) {
+    Level(Long level) {
         this.level = level;
     }
 
-    public int getLevel() {
+    public Long getLevel() {
         return level;
     }
 }

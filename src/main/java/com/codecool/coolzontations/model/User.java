@@ -1,5 +1,7 @@
 package com.codecool.coolzontations.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,7 +18,8 @@ public class User {
 
     @Id
     @GeneratedValue
-    private int id;
+    @Column(name = "userID")
+    private Long id;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -26,9 +29,12 @@ public class User {
 
     @OneToMany(mappedBy = "host")
     @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private Set<Consultation> hostedConsultations;
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "participants")
+    @EqualsAndHashCode.Exclude
+    @JsonBackReference
     private Set<Consultation> consultationAsParticipant;
 
 

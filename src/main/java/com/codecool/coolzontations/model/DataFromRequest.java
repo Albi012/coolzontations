@@ -12,6 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class DataFromRequest {
 
-    private Integer userID;
-    private Integer consultationID;
+    private Long userID;
+    private Long consultationID;
 }

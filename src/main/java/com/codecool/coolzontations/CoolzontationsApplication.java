@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -51,7 +52,7 @@ public class CoolzontationsApplication {
             Set<Subject> subjects = new HashSet<>(Arrays.asList(Subject.JAVA, Subject.JAVASCRIPT, Subject.REACT));
 
             Consultation c1 = Consultation.builder()
-                    .date(LocalDate.now())
+                    .date(LocalDateTime.now())
                     .duration(30)
                     .subjects(subjects)
                     .participantLimit(3)
@@ -61,9 +62,10 @@ public class CoolzontationsApplication {
             user1.addConsultation(c1);
             c1.addParticipant(user3);
             c1.addParticipant(user2);
+            c1.addParticipant(user4);
 
             Consultation c2 = Consultation.builder()
-                    .date(LocalDate.of(1990, 12, 21))
+                    .date(LocalDateTime.of(1990, 12, 21, 10, 10))
                     .duration(90)
                     .subjects(subjects)
                     .participantLimit(1)
@@ -75,7 +77,7 @@ public class CoolzontationsApplication {
             c2.addParticipant(user3);
 
             Consultation c3 = Consultation.builder()
-                    .date(LocalDate.of(2019, 11, 25))
+                    .date(LocalDateTime.of(2019, 11, 25, 12, 30))
                     .duration(120)
                     .subjects(subjects)
                     .participantLimit(2)
