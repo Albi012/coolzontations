@@ -8,6 +8,7 @@ import com.codecool.coolzontations.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.http.HttpRequest;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,5 +69,10 @@ public class RouteController {
         return user.map(value -> consultationRepository.findAll().stream().filter(consultation -> consultation.getParticipants().contains(value)).collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 
+    @GetMapping("/myHostedConsultations/{id}")
+    public List<Consultation> myHostedConsultations(@PathVariable("id") Long id){
+        Optional<User> user = userRepository.findById(id);
+        return user.map(value -> consultationRepository.findAll().stream().filter(consultation -> consultation.getHost().equals(user.get())).collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
 
 }
