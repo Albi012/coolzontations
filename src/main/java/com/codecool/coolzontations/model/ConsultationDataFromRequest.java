@@ -14,9 +14,9 @@ import java.util.Set;
 @Component
 public class ConsultationDataFromRequest {
 
-    private LocalDateTime date;
-    private Set<Subject> subjects;
-    private User host;
+//    private LocalDateTime date;
+//    private Set<Subject> subjects;
+    private Long hostID;
     private Integer duration;
     private Integer participantLimit;
     private String description;

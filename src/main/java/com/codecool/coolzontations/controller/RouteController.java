@@ -1,15 +1,13 @@
 package com.codecool.coolzontations.controller;
 
-import com.codecool.coolzontations.model.Consultation;
-import com.codecool.coolzontations.model.ConsultationDataFromRequest;
-import com.codecool.coolzontations.model.DataFromRequest;
-import com.codecool.coolzontations.model.User;
+import com.codecool.coolzontations.model.*;
 import com.codecool.coolzontations.repository.ConsultationRepository;
 import com.codecool.coolzontations.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.http.HttpRequest;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -66,16 +64,19 @@ public class RouteController {
 
     @PostMapping("/createNewConsultation")
     public void createNewConsultation(@RequestBody ConsultationDataFromRequest c){
+        System.out.println(c);
+        Optional<User> host = userRepository.findById(c.getHostID());
+        if (host.isPresent()) {
         Consultation consultation = Consultation.builder()
-                .date(c.getDate())
-                .subjects(c.getSubjects())
-                .host(c.getHost())
+                .date(LocalDateTime.now()) // TODO
+                .subject(Subject.JAVA) // TODO
+                .host(host.get())
                 .duration(c.getDuration())
                 .participantLimit(c.getParticipantLimit())
                 .description(c.getDescription())
                 .build();
         consultationRepository.save(consultation);
-
+        }
     }
 
     @GetMapping("/myJoinedConsultations/{id}")
