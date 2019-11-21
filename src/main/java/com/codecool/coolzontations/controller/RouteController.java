@@ -67,15 +67,15 @@ public class RouteController {
         System.out.println(c);
         Optional<User> host = userRepository.findById(c.getHostID());
         if (host.isPresent()) {
-        Consultation consultation = Consultation.builder()
-                .date(LocalDateTime.now()) // TODO
+            Consultation consultation = Consultation.builder()
+                .date(c.getDateTime())
                 .subject(Subject.JAVA) // TODO
                 .host(host.get())
                 .duration(c.getDuration())
                 .participantLimit(c.getParticipantLimit())
                 .description(c.getDescription())
                 .build();
-        consultationRepository.save(consultation);
+            consultationRepository.save(consultation);
         }
     }
 
