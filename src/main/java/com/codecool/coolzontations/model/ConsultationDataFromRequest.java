@@ -6,6 +6,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -14,7 +16,6 @@ import java.util.Set;
 @Component
 public class ConsultationDataFromRequest {
 
-//    private Set<Subject> subjects;
     private Integer year;
     private Integer month;
     private Integer day;
@@ -24,9 +25,18 @@ public class ConsultationDataFromRequest {
     private Integer duration;
     private Integer participantLimit;
     private String description;
+    private List<String> subjects;
 
     public LocalDateTime getDateTime() {
         return LocalDateTime.of(this.getYear(),this.getMonth(),this.getDay(),this.getHour(),this.getMinute());
+    }
+
+    public Set<Subject> getAllSubjects() {
+        Set<Subject> result = new HashSet<>();
+        for (String subjectString: this.subjects) {
+            result.add(Subject.getSubjectByName(subjectString));
+        }
+        return result;
     }
 
 }
