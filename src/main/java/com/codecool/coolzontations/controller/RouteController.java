@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.http.HttpRequest;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -64,12 +65,11 @@ public class RouteController {
 
     @PostMapping("/createNewConsultation")
     public void createNewConsultation(@RequestBody ConsultationDataFromRequest c){
-        System.out.println(c);
         Optional<User> host = userRepository.findById(c.getHostID());
         if (host.isPresent()) {
             Consultation consultation = Consultation.builder()
                 .date(c.getDateTime())
-                .subject(Subject.JAVA) // TODO
+                .subjects(c.getAllSubjects())
                 .host(host.get())
                 .duration(c.getDuration())
                 .participantLimit(c.getParticipantLimit())
@@ -91,4 +91,8 @@ public class RouteController {
         return user.map(value -> consultationRepository.findAll().stream().filter(consultation -> consultation.getHost().equals(user.get())).collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 
+    @GetMapping("/subjects")
+    public List<Subject> subjects() {
+        return Arrays.asList(Subject.values());
+    }
 }
