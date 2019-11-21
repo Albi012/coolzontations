@@ -67,10 +67,10 @@ public class CoolzontationsApplication {
             c1.addParticipant(user2);
 
             Consultation c2 = Consultation.builder()
-                    .date(LocalDateTime.of(1990, 12, 21, 10, 10))
+                    .date(LocalDateTime.of(2020, 1, 21, 10, 10))
                     .duration(90)
                     .subjects(subjects)
-                    .participantLimit(7)
+                    .participantLimit(2)
                     .description("fundakave")
                     .build();
 

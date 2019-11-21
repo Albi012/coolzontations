@@ -52,7 +52,7 @@ public class Consultation {
             inverseJoinColumns = { @JoinColumn(name = "userID")})
     @JsonManagedReference
     @ToString.Exclude
-    private Set<User> participants;
+    private Set<User> participants = new HashSet<>();
 
     @Column(nullable = false)
     private Integer duration;
