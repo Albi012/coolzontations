@@ -93,6 +93,7 @@ public class CoolzontationsApplication {
             consultationRepository.saveAll(Arrays.asList(c1, c2, c3));
             userRepository.save(user4);
 
+
         };
     }
 }

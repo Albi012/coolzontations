@@ -1,11 +1,10 @@
 package com.codecool.coolzontations.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -32,6 +31,7 @@ public class Consultation {
     private Long id;
 
     @Column(nullable = false)
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private LocalDateTime date;
 
     @Singular

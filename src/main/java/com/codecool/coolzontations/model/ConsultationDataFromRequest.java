@@ -15,18 +15,14 @@ import java.util.Set;
 public class ConsultationDataFromRequest {
 
 //    private Set<Subject> subjects;
-    private Integer year;
-    private Integer month;
-    private Integer day;
-    private Integer hour;
-    private Integer minute;
+    private LocalDateTime date;
     private Long hostID;
     private Integer duration;
     private Integer participantLimit;
     private String description;
 
-    public LocalDateTime getDateTime() {
-        return LocalDateTime.of(this.getYear(),this.getMonth(),this.getDay(),this.getHour(),this.getMinute());
-    }
+//    public LocalDateTime getDateTime() {
+//        return LocalDateTime.of(this.getYear(),this.getMonth(),this.getDay(),this.getHour(),this.getMinute());
+//    }
 
 }

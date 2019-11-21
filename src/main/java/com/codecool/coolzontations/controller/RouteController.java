@@ -6,8 +6,6 @@ import com.codecool.coolzontations.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpRequest;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,7 +66,7 @@ public class RouteController {
         Optional<User> host = userRepository.findById(c.getHostID());
         if (host.isPresent()) {
             Consultation consultation = Consultation.builder()
-                .date(c.getDateTime())
+                .date(c.getDate())
                 .subject(Subject.JAVA) // TODO
                 .host(host.get())
                 .duration(c.getDuration())
