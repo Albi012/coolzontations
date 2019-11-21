@@ -42,7 +42,7 @@ public class RouteController {
             if(consultation.get().getParticipantLimit()> consultation.get().getParticipants().size()) {
                 consultation.get().addParticipant(user.get());
                 consultationRepository.saveAndFlush(consultation.get());
-                return true;
+    return true;
             }
         }
         return false;
@@ -64,7 +64,6 @@ public class RouteController {
 
     @PostMapping("/createNewConsultation")
     public void createNewConsultation(@RequestBody ConsultationDataFromRequest c){
-        System.out.println(c);
         Optional<User> host = userRepository.findById(c.getHostID());
         if (host.isPresent()) {
         Consultation consultation = Consultation.builder()
@@ -75,7 +74,7 @@ public class RouteController {
                 .participantLimit(c.getParticipantLimit())
                 .description(c.getDescription())
                 .build();
-        consultationRepository.save(consultation);
+    consultationRepository.saveAndFlush(consultation);
         }
     }
 
