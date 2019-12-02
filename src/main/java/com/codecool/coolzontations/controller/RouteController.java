@@ -36,46 +36,40 @@ public class RouteController {
 
     @PostMapping("/joinConsultation")
     public boolean addParticipantToConsultation(@RequestBody DataFromRequest dataFromRequest) {
-        Optional<User> user = userRepository.findById(dataFromRequest.getUserID());
-        Optional<Consultation> consultation = consultationRepository.findById(dataFromRequest.getConsultationID());
-        if(consultation.isPresent() && user.isPresent()){
-            if(consultation.get().getParticipantLimit()> consultation.get().getParticipants().size()) {
-                consultation.get().addParticipant(user.get());
-                consultationRepository.saveAndFlush(consultation.get());
+        User user = userRepository.findById(dataFromRequest.getUserID()).orElseThrow();
+        Consultation consultation = consultationRepository.findById(dataFromRequest.getConsultationID()).orElseThrow();
+            if(consultation.getParticipantLimit()> consultation.getParticipants().size()) {
+                consultation.addParticipant(user);
+                consultationRepository.saveAndFlush(consultation);
     return true;
             }
-        }
         return false;
     }
 
     @PostMapping("/dropConsultation")
     public boolean removeParticipantFromConsultation(@RequestBody DataFromRequest dataFromRequest ) {
-        Optional<User> user = userRepository.findById(dataFromRequest.getUserID());
-        Optional<Consultation> consultation = consultationRepository.findById(dataFromRequest.getConsultationID());
-        if(consultation.isPresent() && user.isPresent()){
-            if(consultation.get().getParticipantLimit()> consultation.get().getParticipants().size()) {
-                consultation.get().removeParticipant(user.get());
-                consultationRepository.saveAndFlush(consultation.get());
+        User user = userRepository.findById(dataFromRequest.getUserID()).orElseThrow();
+        Consultation consultation = consultationRepository.findById(dataFromRequest.getConsultationID()).orElseThrow();
+            if(consultation.getParticipantLimit()> consultation.getParticipants().size()) {
+                consultation.removeParticipant(user);
+                consultationRepository.saveAndFlush(consultation);
                 return true;
             }
-        }
         return false;
     }
 
     @PostMapping("/createNewConsultation")
     public void createNewConsultation(@RequestBody ConsultationDataFromRequest c){
-        Optional<User> host = userRepository.findById(c.getHostID());
-        if (host.isPresent()) {
+        User host = userRepository.findById(c.getHostID()).orElseThrow();
         Consultation consultation = Consultation.builder()
                 .date(LocalDateTime.now()) // TODO
                 .subject(Subject.JAVA) // TODO
-                .host(host.get())
+                .host(host)
                 .duration(c.getDuration())
                 .participantLimit(c.getParticipantLimit())
                 .description(c.getDescription())
                 .build();
     consultationRepository.saveAndFlush(consultation);
-        }
     }
 
     @GetMapping("/myJoinedConsultations/{id}")
