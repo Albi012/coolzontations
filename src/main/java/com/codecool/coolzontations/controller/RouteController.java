@@ -7,8 +7,6 @@ import com.codecool.coolzontations.service.DataManger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.net.http.HttpRequest;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -24,8 +22,6 @@ public class RouteController {
    @Autowired
    private UserRepository userRepository;
 
-   @Autowired
-   private DataManger dataManger;
 
    @Autowired
    private ConsultationRepository consultationRepository;
@@ -70,7 +66,7 @@ public class RouteController {
 
 
     @PostMapping("/registration")
-    public boolean userRegistration(@RequestBody UserModel userModel){
+    public String userRegistration(@RequestBody UserModel userModel){
         return dataManger.userReg(userModel);
     }
 
