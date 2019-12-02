@@ -38,6 +38,11 @@ public class User {
     @ToString.Exclude
     private Set<Consultation> consultationAsParticipant;
 
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
 
     public void addConsultation(Consultation c){
         if(this.hostedConsultations == null){

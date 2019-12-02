@@ -3,6 +3,7 @@ package com.codecool.coolzontations.controller;
 import com.codecool.coolzontations.model.*;
 import com.codecool.coolzontations.repository.ConsultationRepository;
 import com.codecool.coolzontations.repository.UserRepository;
+import com.codecool.coolzontations.service.DataManger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +16,9 @@ import java.util.stream.Collectors;
 @CrossOrigin
 @RestController
 public class RouteController {
+
+   @Autowired
+   private DataManger dataManger;
 
    @Autowired
    private UserRepository userRepository;
@@ -35,44 +39,17 @@ public class RouteController {
 
     @PostMapping("/joinConsultation")
     public boolean addParticipantToConsultation(@RequestBody DataFromRequest dataFromRequest) {
-        Optional<User> user = userRepository.findById(dataFromRequest.getUserID());
-        Optional<Consultation> consultation = consultationRepository.findById(dataFromRequest.getConsultationID());
-        if(consultation.isPresent() && user.isPresent()){
-            if(consultation.get().getParticipantLimit()> consultation.get().getParticipants().size()) {
-                consultation.get().addParticipant(user.get());
-                consultationRepository.saveAndFlush(consultation.get());
-                return true;
-            }
-        }
-        return false;
+        return dataManger.joinConsultation(dataFromRequest);
     }
 
     @PostMapping("/dropConsultation")
     public boolean removeParticipantFromConsultation(@RequestBody DataFromRequest dataFromRequest ) {
-        Optional<User> user = userRepository.findById(dataFromRequest.getUserID());
-        Optional<Consultation> consultation = consultationRepository.findById(dataFromRequest.getConsultationID());
-        if(consultation.isPresent() && user.isPresent()){
-            if(consultation.get().getParticipantLimit()> consultation.get().getParticipants().size()) {
-                consultation.get().removeParticipant(user.get());
-                consultationRepository.saveAndFlush(consultation.get());
-                return true;
-            }
-        }
-        return false;
+        return dataManger.removeParticipantFromConsultation(dataFromRequest);
     }
-// TODO: service layer for business logic
+
     @PostMapping("/createNewConsultation")
-    public void createNewConsultation(@RequestBody ConsultationDataFromRequest c){
-        User host = userRepository.findById(c.getHostID()).orElseThrow();
-            Consultation consultation = Consultation.builder()
-                .date(c.getDate())
-                .subjects(c.getAllSubjects())
-                .host(host)
-                .duration(c.getDuration())
-                .participantLimit(c.getParticipantLimit())
-                .description(c.getDescription())
-                .build();
-            consultationRepository.save(consultation);
+    public void createNewConsultation(@RequestBody ConsultationDataFromRequest consultationDataFromRequest){
+        dataManger.createNewConsultation(consultationDataFromRequest);
     }
 
     @GetMapping("/myJoinedConsultations/{id}")
@@ -85,6 +62,12 @@ public class RouteController {
     public List<Consultation> myHostedConsultations(@PathVariable("id") Long id){
         Optional<User> user = userRepository.findById(id);
         return user.map(value -> consultationRepository.findAll().stream().filter(consultation -> consultation.getHost().equals(user.get())).collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
+
+
+    @PostMapping("/registration")
+    public String userRegistration(@RequestBody UserModel userModel){
+        return dataManger.userReg(userModel);
     }
 
     @GetMapping("/subjects")

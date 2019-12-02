@@ -15,8 +15,8 @@ public enum Subject {
     }
 
     public static Subject getSubjectByName(String name) {
-        for(Subject subject: Subject.values()) {
-            if(subject.getStringValue().equals(name)){
+        for (Subject subject : Subject.values()) {
+            if (subject.getStringValue().equals(name)) {
                 return subject;
             }
         }
