@@ -3,6 +3,7 @@ package com.codecool.coolzontations.controller;
 import com.codecool.coolzontations.model.*;
 import com.codecool.coolzontations.repository.ConsultationRepository;
 import com.codecool.coolzontations.repository.UserRepository;
+import com.codecool.coolzontations.service.DataManger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,9 @@ import java.util.stream.Collectors;
 @CrossOrigin
 @RestController
 public class RouteController {
+
+   @Autowired
+   private DataManger dataManger;
 
    @Autowired
    private UserRepository userRepository;
@@ -82,6 +86,12 @@ public class RouteController {
     public List<Consultation> myHostedConsultations(@PathVariable("id") Long id){
         Optional<User> user = userRepository.findById(id);
         return user.map(value -> consultationRepository.findAll().stream().filter(consultation -> consultation.getHost().equals(user.get())).collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
+
+
+    @PostMapping("/registration")
+    public boolean userRegistration(@RequestBody UserModel userModel){
+        return dataManger.userReg(userModel);
     }
 
 }
