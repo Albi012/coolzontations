@@ -60,21 +60,19 @@ public class RouteController {
         }
         return false;
     }
-
+// TODO: service layer for business logic
     @PostMapping("/createNewConsultation")
     public void createNewConsultation(@RequestBody ConsultationDataFromRequest c){
-        Optional<User> host = userRepository.findById(c.getHostID());
-        if (host.isPresent()) {
+        User host = userRepository.findById(c.getHostID()).orElseThrow();
             Consultation consultation = Consultation.builder()
                 .date(c.getDate())
                 .subjects(c.getAllSubjects())
-                .host(host.get())
+                .host(host)
                 .duration(c.getDuration())
                 .participantLimit(c.getParticipantLimit())
                 .description(c.getDescription())
                 .build();
             consultationRepository.save(consultation);
-        }
     }
 
     @GetMapping("/myJoinedConsultations/{id}")

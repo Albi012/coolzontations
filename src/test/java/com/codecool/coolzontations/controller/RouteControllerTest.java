@@ -116,11 +116,12 @@ public class RouteControllerTest {
         testEntityManager.clear();
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("date", LocalDateTime.of(2019, 10, 20, 10, 30));
-        jsonObject.put("subject", Subject.JAVA);
-        jsonObject.put("host", finalUser);
+        jsonObject.put("subject", Arrays.asList(Subject.JAVA));
+        jsonObject.put("hostID", finalUser.getId());
         jsonObject.put("duration", 10);
         jsonObject.put("participantLimit", 5);
         jsonObject.put("description", "TestDesc");
+        System.out.println(jsonObject.toString());
         mvc.perform(MockMvcRequestBuilders
                 .post("/createNewConsultation")
                 .contentType(MediaType.APPLICATION_JSON)
