@@ -43,7 +43,7 @@ public class Consultation {
     @ToString.Exclude
     @JoinTable(name = "hosted_consultations")
     @JsonManagedReference
-    private User host;
+    private UserModel host;
 
 
     @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
@@ -52,7 +52,7 @@ public class Consultation {
             inverseJoinColumns = { @JoinColumn(name = "userID")})
     @JsonManagedReference
     @ToString.Exclude
-    private Set<User> participants = new HashSet<>();
+    private Set<UserModel> participants = new HashSet<>();
 
     @Column(nullable = false)
     private Integer duration;
@@ -64,7 +64,7 @@ public class Consultation {
     private String description;
 
     public boolean findUser(int id) {
-        for (User participant : this.getParticipants()) {
+        for (UserModel participant : this.getParticipants()) {
             if (participant.getId() == id) {
                 return true;
             }
@@ -72,20 +72,20 @@ public class Consultation {
         return false;
     }
 
-    public boolean addParticipant(User user) {
+    public boolean addParticipant(UserModel userModel) {
         if (this.participants == null) {
             this.participants = new HashSet<>();
         }
-        if (user.getConsultationAsParticipant() == null) {
-            user.setConsultationAsParticipant(new HashSet<>());
+        if (userModel.getConsultationAsParticipant() == null) {
+            userModel.setConsultationAsParticipant(new HashSet<>());
         }
-        this.participants.add(user);
-        user.getConsultationAsParticipant().add(this);
+        this.participants.add(userModel);
+        userModel.getConsultationAsParticipant().add(this);
         return true;
     }
 
-    public void removeParticipant(User user) {
-        this.participants.remove(user);
+    public void removeParticipant(UserModel userModel) {
+        this.participants.remove(userModel);
     }
 
 }

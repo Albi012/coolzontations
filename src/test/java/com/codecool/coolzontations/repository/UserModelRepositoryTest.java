@@ -1,14 +1,13 @@
 package com.codecool.coolzontations.repository;
 
 import com.codecool.coolzontations.model.Level;
-import com.codecool.coolzontations.model.User;
+import com.codecool.coolzontations.model.UserModel;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
@@ -17,49 +16,50 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 @ActiveProfiles("test")
-public class UserRepositoryTest {
+public class UserModelRepositoryTest {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserModelRepository userModelRepository;
 
     @Autowired
     private TestEntityManager entityManager;
 
     @Test
     public void saveOneUser(){
-        User testUser = User.builder()
+        UserModel testUserModel = UserModel.builder()
                 .username("TestUser")
                 .level(Level.OOP)
                 .build();
-        userRepository.save(testUser);
-        List<User> users = userRepository.findAll();
-        assertThat(users).hasSize(1);
+        userModelRepository.save(testUserModel);
+        List<UserModel> userModels = userModelRepository.findAll();
+        assertThat(userModels).hasSize(1);
     }
 
 //    @Test(expected = DataIntegrityViolationException.class)
     public void saveUniqueFieldTwice(){
-        User testUser1 = User.builder()
+        UserModel testUserModel1 = UserModel.builder()
                 .username("TestUser")
                 .level(Level.OOP)
                 .build();
 
-        userRepository.save(testUser1);
+        userModelRepository.save(testUserModel1);
 
-        User testUser2 = User.builder()
+        UserModel testUserModel2 = UserModel.builder()
                 .username("TestUser")
                 .level(Level.WEB)
                 .build();
 
-        userRepository.saveAndFlush(testUser2);
+        userModelRepository.saveAndFlush(testUserModel2);
     }
 
     @Test
     public void userNameShouldBeNotNull(){
-        User user = User.builder()
+        UserModel userModel = UserModel.builder()
                 .level(Level.WEB)
                 .build();
 
-        assertThrows(DataIntegrityViolationException.class,()->{userRepository.saveAndFlush(user);});
+        assertThrows(DataIntegrityViolationException.class,()->{
+            userModelRepository.saveAndFlush(userModel);});
 
     }
 

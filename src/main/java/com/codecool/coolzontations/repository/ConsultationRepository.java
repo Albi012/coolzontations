@@ -1,7 +1,6 @@
 package com.codecool.coolzontations.repository;
 
 import com.codecool.coolzontations.model.Consultation;
-import com.codecool.coolzontations.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

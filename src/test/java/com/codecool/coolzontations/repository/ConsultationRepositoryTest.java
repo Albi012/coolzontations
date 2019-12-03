@@ -2,14 +2,12 @@ package com.codecool.coolzontations.repository;
 
 import com.codecool.coolzontations.model.Consultation;
 import com.codecool.coolzontations.model.Level;
-import com.codecool.coolzontations.model.User;
+import com.codecool.coolzontations.model.UserModel;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -27,7 +25,7 @@ public class ConsultationRepositoryTest {
     private ConsultationRepository consultationRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private UserModelRepository userModelRepository;
 
     @Autowired
     private TestEntityManager testEntityManager;
@@ -59,17 +57,17 @@ public class ConsultationRepositoryTest {
 
     @Test
     public void userPersistWithConsultation() {
-        User testUser1 = User.builder()
+        UserModel testUserModel1 = UserModel.builder()
                 .username("TestUser1")
                 .level(Level.WEB)
                 .build();
-        User testUser2 = User.builder()
+        UserModel testUserModel2 = UserModel.builder()
                 .username("TestUser2")
                 .level(Level.OOP)
                 .build();
 
         Consultation testConsultation = Consultation.builder()
-                .participants(new HashSet<>(Arrays.asList(testUser1, testUser2)))
+                .participants(new HashSet<>(Arrays.asList(testUserModel1, testUserModel2)))
                 .duration(30)
                 .date(LocalDateTime.of(2019, 10, 12, 12, 30))
                 .description("TestDesc")
@@ -77,15 +75,15 @@ public class ConsultationRepositoryTest {
                 .build();
 
         consultationRepository.save(testConsultation);
-        List<User> users = userRepository.findAll();
-        assertThat(users).allMatch(user -> user.getId() > 0L);
+        List<UserModel> userModels = userModelRepository.findAll();
+        assertThat(userModels).allMatch(user -> user.getId() > 0L);
 
     }
 
     @Test
     @Transactional
     public void getUserJoinedConsultations() {
-        User user = User.builder()
+        UserModel userModel = UserModel.builder()
                 .username("OptionalUser")
                 .level(Level.WEB)
                 .build();
@@ -94,29 +92,29 @@ public class ConsultationRepositoryTest {
                 .description("testDesc")
                 .duration(30)
                 .participantLimit(10)
-                .participants(new HashSet<>(Arrays.asList(user)))
+                .participants(new HashSet<>(Arrays.asList(userModel)))
                 .build();
         consultationRepository.saveAndFlush(consultation);
         testEntityManager.clear();
-        assertThat(consultationRepository.findAll()).anyMatch(consultation1 -> consultation1.getParticipants().contains(user));
+        assertThat(consultationRepository.findAll()).anyMatch(consultation1 -> consultation1.getParticipants().contains(userModel));
     }
 
     @Test
     public void getUserHostedConsultations() {
-        User user = User.builder()
+        UserModel userModel = UserModel.builder()
                 .username("OptionalUser")
                 .level(Level.WEB)
                 .build();
-        userRepository.saveAndFlush(user);
+        userModelRepository.saveAndFlush(userModel);
         Consultation consultation = Consultation.builder()
                 .date(LocalDateTime.now())
-                .host(user)
+                .host(userModel)
                 .description("testDesc")
                 .duration(30)
                 .participantLimit(10)
                 .build();
         consultationRepository.saveAndFlush(consultation);
         testEntityManager.clear();
-        assertThat(consultationRepository.findAll()).anyMatch(consultation1 -> consultation1.getHost().equals(user));
+        assertThat(consultationRepository.findAll()).anyMatch(consultation1 -> consultation1.getHost().equals(userModel));
     }
 }

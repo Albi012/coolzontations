@@ -3,9 +3,9 @@ package com.codecool.coolzontations.controller;
 import com.codecool.coolzontations.model.Consultation;
 import com.codecool.coolzontations.model.Level;
 import com.codecool.coolzontations.model.Subject;
-import com.codecool.coolzontations.model.User;
+import com.codecool.coolzontations.model.UserModel;
 import com.codecool.coolzontations.repository.ConsultationRepository;
-import com.codecool.coolzontations.repository.UserRepository;
+import com.codecool.coolzontations.repository.UserModelRepository;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,7 +36,7 @@ public class RouteControllerTest {
 
 
     @Autowired
-    private UserRepository userRepository;
+    private UserModelRepository userModelRepository;
 
     @Autowired
     private ConsultationRepository consultationRepository;
@@ -50,7 +50,7 @@ public class RouteControllerTest {
     @Test
     @Transactional
     public void addParticipantToConsultation() throws Exception {
-        User optionalUser = User.builder()
+        UserModel optionalUserModel = UserModel.builder()
                 .username("OptionalUser")
                 .level(Level.WEB)
                 .build();
@@ -60,7 +60,7 @@ public class RouteControllerTest {
                 .duration(30)
                 .participantLimit(10)
                 .build();
-        optionalUser = userRepository.saveAndFlush(optionalUser);
+        optionalUserModel = userModelRepository.saveAndFlush(optionalUserModel);
         optionalConsultation = consultationRepository.saveAndFlush(optionalConsultation);
 
         testEntityManager.clear();
@@ -68,7 +68,7 @@ public class RouteControllerTest {
         mvc.perform(MockMvcRequestBuilders
                 .post("/joinConsultation")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"userID\":" + optionalUser.getId() + ", \"consultationID\": " + optionalConsultation.getId() + "}")
+                .content("{\"userID\":" + optionalUserModel.getId() + ", \"consultationID\": " + optionalConsultation.getId() + "}")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -80,44 +80,44 @@ public class RouteControllerTest {
     @Test
     @Transactional
     public void cancelConsultationParticipationAsParticipant() throws Exception {
-        User optionalUser = User.builder()
+        UserModel optionalUserModel = UserModel.builder()
                 .username("OptionalUser")
                 .level(Level.WEB)
                 .build();
         Consultation optionalConsultation = Consultation.builder()
                 .date(LocalDateTime.now())
-                .participants(new HashSet<>(Arrays.asList(optionalUser)))
+                .participants(new HashSet<>(Arrays.asList(optionalUserModel)))
                 .description("OptionalDesc")
                 .duration(30)
                 .participantLimit(10)
                 .build();
-        User finalOptionalUser = userRepository.saveAndFlush(optionalUser);
+        UserModel finalOptionalUserModel = userModelRepository.saveAndFlush(optionalUserModel);
         optionalConsultation = consultationRepository.saveAndFlush(optionalConsultation);
         testEntityManager.clear();
         mvc.perform(MockMvcRequestBuilders
                 .post("/dropConsultation")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"userID\":" + optionalUser.getId() + "," +
+                .content("{\"userID\":" + optionalUserModel.getId() + "," +
                         " \"consultationID\": " + optionalConsultation.getId() + "}")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        assertThat(consultationRepository.findAll()).noneMatch(consultation -> consultation.getParticipants().contains(finalOptionalUser));
+        assertThat(consultationRepository.findAll()).noneMatch(consultation -> consultation.getParticipants().contains(finalOptionalUserModel));
     }
 
 
     @Test
     @Transactional
     public void creatingNewConsultationFromConsultationData() throws Exception {
-        User user = User.builder()
+        UserModel userModel = UserModel.builder()
                 .username("TestUser")
                 .level(Level.WEB)
                 .build();
-        User finalUser = userRepository.saveAndFlush(user);
+        UserModel finalUserModel = userModelRepository.saveAndFlush(userModel);
         testEntityManager.clear();
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("date", LocalDateTime.of(2019, 10, 20, 10, 30));
         jsonObject.put("subject", Arrays.asList(Subject.JAVA));
-        jsonObject.put("hostID", finalUser.getId());
+        jsonObject.put("hostID", finalUserModel.getId());
         jsonObject.put("duration", 10);
         jsonObject.put("participantLimit", 5);
         jsonObject.put("description", "TestDesc");
@@ -128,7 +128,7 @@ public class RouteControllerTest {
                 .content(String.valueOf(jsonObject))
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        assertThat(consultationRepository.findAll()).anyMatch(consultation -> consultation.getHost().getId().equals(finalUser.getId()));
+        assertThat(consultationRepository.findAll()).anyMatch(consultation -> consultation.getHost().getId().equals(finalUserModel.getId()));
     }
 
 

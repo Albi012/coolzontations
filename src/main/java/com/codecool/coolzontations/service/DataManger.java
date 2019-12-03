@@ -2,7 +2,7 @@ package com.codecool.coolzontations.service;
 
 import com.codecool.coolzontations.model.*;
 import com.codecool.coolzontations.repository.ConsultationRepository;
-import com.codecool.coolzontations.repository.UserRepository;
+import com.codecool.coolzontations.repository.UserModelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class DataManger {
 
     @Autowired
-    private UserRepository userRepository;
+    private UserModelRepository userModelRepository;
 
     @Autowired
     private ConsultationRepository consultationRepository;
@@ -24,10 +24,10 @@ public class DataManger {
     }
 
     public boolean joinConsultation(DataFromRequest dataFromRequest) {
-        User user = userRepository.findById(dataFromRequest.getUserID()).orElseThrow();
+        UserModel userModel = userModelRepository.findById(dataFromRequest.getUserID()).orElseThrow();
         Consultation consultation = consultationRepository.findById(dataFromRequest.getConsultationID()).orElseThrow();
         if (consultation.getParticipantLimit() > consultation.getParticipants().size()) {
-            consultation.addParticipant(user);
+            consultation.addParticipant(userModel);
             consultationRepository.saveAndFlush(consultation);
             return true;
         }
@@ -35,10 +35,10 @@ public class DataManger {
     }
 
     public boolean removeParticipantFromConsultation(DataFromRequest dataFromRequest) {
-        User user = userRepository.findById(dataFromRequest.getUserID()).orElseThrow();
+        UserModel userModel = userModelRepository.findById(dataFromRequest.getUserID()).orElseThrow();
         Consultation consultation = consultationRepository.findById(dataFromRequest.getConsultationID()).orElseThrow();
         if (consultation.getParticipantLimit() > consultation.getParticipants().size()) {
-            consultation.removeParticipant(user);
+            consultation.removeParticipant(userModel);
             consultationRepository.saveAndFlush(consultation);
             return true;
         }
@@ -46,7 +46,7 @@ public class DataManger {
     }
 
     public void createNewConsultation(ConsultationDataFromRequest consultationDataFromRequest) {
-        User host = userRepository.findById(consultationDataFromRequest.getHostID()).orElseThrow();
+        UserModel host = userModelRepository.findById(consultationDataFromRequest.getHostID()).orElseThrow();
         Consultation consultation = Consultation.builder()
                 .date(consultationDataFromRequest.getDate())
                 .subjects(consultationDataFromRequest.getAllSubjects())
@@ -58,16 +58,16 @@ public class DataManger {
         consultationRepository.saveAndFlush(consultation);
     }
 
-    public String userReg(UserModel userModel) {
-        if(!userRepository.findByUsername(userModel.getUsername())){
-            if(!userRepository.findByEmail(userModel.getEmail())){
-                User user = User.builder()
-                        .level(userModel.getLevel())
-                        .username(userModel.getUsername())
-                        .email(userModel.getEmail())
-                        .password(passwordEncoder().encode(userModel.getPassword()))
+    public String userReg(RegistrationUserModel registrationUserModel) {
+        if(!userModelRepository.existsByUsername(registrationUserModel.getUsername())){
+            if(!userModelRepository.existsByEmail(registrationUserModel.getEmail())){
+                UserModel userModel = UserModel.builder()
+                        .level(registrationUserModel.getLevel())
+                        .username(registrationUserModel.getUsername())
+                        .email(registrationUserModel.getEmail())
+                        .password(passwordEncoder().encode(registrationUserModel.getPassword()))
                         .build();
-                userRepository.save(user);
+                userModelRepository.save(userModel);
                 return "Registration successful";
             } else {
                 return "Email already in use";
