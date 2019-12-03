@@ -9,6 +9,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class DataManger {
 
@@ -76,5 +78,11 @@ public class DataManger {
             return "Username already in use";
         }
 
+    }
+
+    public String cancelConsultation(Long id) {
+        Consultation consultation = consultationRepository.findById(id).orElseThrow();
+        consultationRepository.delete(consultation);
+        return "Consultation was successfully deleted from the system!";
     }
 }

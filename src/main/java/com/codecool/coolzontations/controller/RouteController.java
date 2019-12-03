@@ -70,6 +70,11 @@ public class RouteController {
         return dataManger.userReg(registrationUserModel);
     }
 
+    @GetMapping("/cancelConsultation/{id}")
+    public String cancelConsultation(@PathVariable Long id){
+        return dataManger.cancelConsultation(id);
+    }
+
     @GetMapping("/subjects")
     public List<Subject> subjects() {
         return Arrays.asList(Subject.values());
