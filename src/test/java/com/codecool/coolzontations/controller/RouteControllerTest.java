@@ -131,5 +131,25 @@ public class RouteControllerTest {
         assertThat(consultationRepository.findAll()).anyMatch(consultation -> consultation.getHost().getId().equals(finalUserModel.getId()));
     }
 
+    @Test
+    @Transactional
+    public void cancelConsultation() throws Exception {
+
+        Consultation consultation = Consultation.builder()
+                .date(LocalDateTime.now())
+                .duration(30)
+                .participantLimit(5)
+                .description("apacuka teszt")
+                .build();
+
+        Consultation consi = consultationRepository.saveAndFlush(consultation);
+
+        mvc.perform(MockMvcRequestBuilders
+                .get("/cancelConsultation/" + consi.getId())
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+        assertThat(consultationRepository.findAll()).noneMatch(consultation1 -> consultation1.getId() == null);
+
+    }
 
 }
