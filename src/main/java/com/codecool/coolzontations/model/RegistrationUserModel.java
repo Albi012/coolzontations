@@ -15,6 +15,7 @@ public class RegistrationUserModel {
     private String username;
     private Level level;
     private String email;
-    private String password;
+    private String password1;
+    private String password2;
 
 }

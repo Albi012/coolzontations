@@ -61,21 +61,25 @@ public class DataManger {
     }
 
     public String userReg(RegistrationUserModel registrationUserModel) {
-        if(!userModelRepository.existsByUsername(registrationUserModel.getUsername())){
-            if(!userModelRepository.existsByEmail(registrationUserModel.getEmail())){
-                UserModel userModel = UserModel.builder()
-                        .level(registrationUserModel.getLevel())
-                        .username(registrationUserModel.getUsername())
-                        .email(registrationUserModel.getEmail())
-                        .password(passwordEncoder().encode(registrationUserModel.getPassword()))
-                        .build();
-                userModelRepository.save(userModel);
-                return "Registration successful";
+        if(registrationUserModel.getPassword1().equals(registrationUserModel.getPassword2())) {
+            if (!userModelRepository.existsByUsername(registrationUserModel.getUsername())) {
+                if (!userModelRepository.existsByEmail(registrationUserModel.getEmail())) {
+                    UserModel userModel = UserModel.builder()
+                            .level(registrationUserModel.getLevel())
+                            .username(registrationUserModel.getUsername())
+                            .email(registrationUserModel.getEmail())
+                            .password(passwordEncoder().encode(registrationUserModel.getPassword1()))
+                            .build();
+                    userModelRepository.save(userModel);
+                    return "Registration successful";
+                } else {
+                    return "Email already in use";
+                }
             } else {
-                return "Email already in use";
+                return "Username already in use";
             }
-        } else {
-            return "Username already in use";
+        }else {
+            return "Passwords does not match";
         }
 
     }
