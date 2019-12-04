@@ -85,4 +85,8 @@ public class DataManger {
         consultationRepository.delete(consultation);
         return "Consultation was successfully deleted from the system!";
     }
+
+    public Optional<UserModel> findUserByUsername(String username){
+        return userModelRepository.findByUsername(username);
+    }
 }
