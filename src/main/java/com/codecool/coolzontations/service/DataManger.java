@@ -61,33 +61,30 @@ public class DataManger {
     }
 
     public String userReg(RegistrationUserModel registrationUserModel) {
-        if(registrationUserModel.getPassword1().equals(registrationUserModel.getPassword2())) {
-            if (!userModelRepository.existsByUsername(registrationUserModel.getUsername())) {
-                if (!userModelRepository.existsByEmail(registrationUserModel.getEmail())) {
-                    UserModel userModel = UserModel.builder()
-                            .level(registrationUserModel.getLevel())
-                            .username(registrationUserModel.getUsername())
-                            .email(registrationUserModel.getEmail())
-                            .password(passwordEncoder().encode(registrationUserModel.getPassword1()))
-                            .build();
-                    userModelRepository.save(userModel);
-                    return "Registration successful";
-                } else {
-                    return "Email already in use";
-                }
+        if (!userModelRepository.existsByUsername(registrationUserModel.getUsername())) {
+            if (!userModelRepository.existsByEmail(registrationUserModel.getEmail())) {
+                UserModel userModel = UserModel.builder()
+                        .level(registrationUserModel.getLevel())
+                        .username(registrationUserModel.getUsername())
+                        .email(registrationUserModel.getEmail())
+                        .password(passwordEncoder().encode(registrationUserModel.getPassword1()))
+                        .build();
+                userModelRepository.save(userModel);
+                return "Registration successful";
             } else {
-                return "Username already in use";
+                return "Email already in use";
             }
-        }else {
-            return "Passwords does not match";
+        } else {
+            return "Username already in use";
         }
-
     }
 
-    public String cancelConsultation(Long id) {
-        Consultation consultation = consultationRepository.findById(id).orElseThrow();
-        consultationRepository.delete(consultation);
-        return "Consultation was successfully deleted from the system!";
+    public String cancelConsultation(DataFromRequest dataFromRequest) {
+        Consultation consultation = consultationRepository.findById(dataFromRequest.getConsultationID()).orElseThrow();
+        if(consultation.getHost().getId().equals(dataFromRequest.getUserID())) {
+            consultationRepository.delete(consultation);
+            return "Consultation was successfully deleted from the system!";
+        } return "Sorry you cannot remove that Consultation";
     }
 
     public Optional<UserModel> findUserByUsername(String username){

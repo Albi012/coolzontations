@@ -5,6 +5,7 @@ import com.codecool.coolzontations.repository.ConsultationRepository;
 import com.codecool.coolzontations.repository.UserModelRepository;
 import com.codecool.coolzontations.service.DataManger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -70,9 +71,10 @@ public class RouteController {
         return dataManger.userReg(registrationUserModel);
     }
 
-    @GetMapping("/cancelConsultation/{id}")
-    public String cancelConsultation(@PathVariable Long id){
-        return dataManger.cancelConsultation(id);
+    // TODO handle userID
+    @GetMapping("/cancelConsultation")
+    public String cancelConsultation(@RequestBody DataFromRequest dataFromRequest){
+        return dataManger.cancelConsultation(dataFromRequest);
     }
 
     @GetMapping("/subjects")
