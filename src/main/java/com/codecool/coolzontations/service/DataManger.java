@@ -39,7 +39,7 @@ public class DataManger {
     public boolean removeParticipantFromConsultation(DataFromRequest dataFromRequest) {
         UserModel userModel = userModelRepository.findById(dataFromRequest.getUserID()).orElseThrow();
         Consultation consultation = consultationRepository.findById(dataFromRequest.getConsultationID()).orElseThrow();
-        if (consultation.getParticipantLimit() > consultation.getParticipants().size()) {
+        if (consultation.getParticipants().contains(userModel)) {
             consultation.removeParticipant(userModel);
             consultationRepository.saveAndFlush(consultation);
             return true;
@@ -70,7 +70,7 @@ public class DataManger {
                         .password(passwordEncoder().encode(registrationUserModel.getPassword1()))
                         .build();
                 userModelRepository.save(userModel);
-                return "Registration successful";
+                return "OK";
             } else {
                 return "Email already in use";
             }

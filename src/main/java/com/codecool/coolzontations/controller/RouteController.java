@@ -72,7 +72,7 @@ public class RouteController {
     }
 
     // TODO handle userID
-    @GetMapping("/cancelConsultation")
+    @PostMapping("/cancelConsultation")
     public String cancelConsultation(@RequestBody DataFromRequest dataFromRequest){
         return dataManger.cancelConsultation(dataFromRequest);
     }
