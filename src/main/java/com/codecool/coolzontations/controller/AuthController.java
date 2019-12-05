@@ -56,7 +56,7 @@ public class AuthController {
                 Map<String, Object> userDetails = new HashMap<>();
                 userDetails.put("username", user.get().getUsername());
                 userDetails.put("level", user.get().getLevel());
-                userDetails.put("userID", user.get().getId());
+                userDetails.put("id", user.get().getId());
 
                 Map<Object, Object> model = new HashMap<>();
                 model.put("user", userDetails);
