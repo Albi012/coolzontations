@@ -46,7 +46,7 @@ public class Consultation {
     private UserModel host;
 
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(name =  "user_consultation_as_participant",
             joinColumns = {@JoinColumn(name = "consultationID")},
             inverseJoinColumns = { @JoinColumn(name = "userID")})
@@ -88,4 +88,7 @@ public class Consultation {
         this.participants.remove(userModel);
     }
 
+    public void removeHost(){
+        this.host = null;
+    }
 }

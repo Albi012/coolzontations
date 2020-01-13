@@ -66,4 +66,7 @@ public class UserModel {
     }
 
 
+    public void removeHostedConsultatuin(Consultation consultation){
+        this.hostedConsultations.remove(consultation);
+    }
 }

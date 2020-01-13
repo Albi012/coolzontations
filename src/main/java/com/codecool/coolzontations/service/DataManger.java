@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -79,12 +80,18 @@ public class DataManger {
         }
     }
 
+    @Transactional
     public String cancelConsultation(DataFromRequest dataFromRequest) {
         Consultation consultation = consultationRepository.findById(dataFromRequest.getConsultationID()).orElseThrow();
-        if(consultation.getHost().getId().equals(dataFromRequest.getUserID())) {
-            consultationRepository.delete(consultation);
-            return "Consultation was successfully deleted from the system!";
-        } return "Sorry you cannot remove that Consultation";
+//        UserModel user = userModelRepository.findById(dataFromRequest.getUserID()).orElseThrow();
+//        user.removeHostedConsultatuin(consultation);
+//        userModelRepository.saveAndFlush(user);
+//        consultation.removeHost();
+//        consultation.getParticipants().clear();
+//        consultationRepository.saveAndFlush(consultation);
+        consultationRepository.delete(consultation);
+        return "Consultation was successfully deleted from the system!";
+
     }
 
     public Optional<UserModel> findUserByUsername(String username){
