@@ -4,10 +4,12 @@ In this application, the codecool students can host consultations for other code
 school, we don't have a tool for this.
 
 # Used technologies
-  -Spring framework
-  -H2 database
-  -Hibernate
-  -Lombok
+     
+   Markup : - Spring framework
+            - H2 database
+            - Hibernate
+            - Lombok
+            
 
 #
  I mainly worked on unit testing and routes.
