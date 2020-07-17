@@ -8,9 +8,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class DataManger {
@@ -96,5 +100,23 @@ public class DataManger {
 
     public Optional<UserModel> findUserByUsername(String username){
         return userModelRepository.findByUsername(username);
+    }
+
+    public List<Consultation> findAllConsultation() {
+        return consultationRepository.findAll();
+    }
+
+    public List<UserModel> findAllUser() {
+        return userModelRepository.findAll();
+    }
+
+    public List<Consultation> getConsultationsAsParticipant(Long id) {
+        Optional<UserModel> user = userModelRepository.findById(id);
+        return user.map(value -> consultationRepository.findAll().stream().filter(consultation -> consultation.getParticipants().contains(value)).collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
+
+    public List<Consultation> getConsultationsAsHost(Long id) {
+        Optional<UserModel> user = userModelRepository.findById(id);
+        return user.map(value -> consultationRepository.findAll().stream().filter(consultation -> consultation.getHost().equals(user.get())).collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 }
