@@ -85,8 +85,8 @@ public class DataManger {
     }
 
     @Transactional
-    public String cancelConsultation(DataFromRequest dataFromRequest) {
-        Consultation consultation = consultationRepository.findById(dataFromRequest.getConsultationID()).orElseThrow();
+    public String cancelConsultation(Long id) {
+        Consultation consultation = consultationRepository.findById(id).orElseThrow();
 //        UserModel user = userModelRepository.findById(dataFromRequest.getUserID()).orElseThrow();
 //        user.removeHostedConsultatuin(consultation);
 //        userModelRepository.saveAndFlush(user);

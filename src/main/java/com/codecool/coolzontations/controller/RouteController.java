@@ -47,10 +47,9 @@ public class RouteController {
         return dataManger.joinConsultation(dataFromRequest);
     }
 
-    // TODO handle userID
-    @PutMapping("/cancel-consultation")
-    public String cancelConsultation(@RequestBody DataFromRequest dataFromRequest){
-        return dataManger.cancelConsultation(dataFromRequest);
+    @PutMapping("/cancel-consultation/{id}")
+    public String cancelConsultation(@PathVariable("id") Long id){
+        return dataManger.cancelConsultation(id);
     }
 
     @DeleteMapping("/consultation")

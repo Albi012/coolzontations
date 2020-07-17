@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -52,6 +53,8 @@ public class RouteControllerTest {
     public void addParticipantToConsultation() throws Exception {
         UserModel optionalUserModel = UserModel.builder()
                 .username("OptionalUser")
+                .email("optuser@cool.com")
+                .password("kacsa")
                 .level(Level.WEB)
                 .build();
         Consultation optionalConsultation = Consultation.builder()
@@ -66,15 +69,13 @@ public class RouteControllerTest {
         testEntityManager.clear();
 
         mvc.perform(MockMvcRequestBuilders
-                .post("/joinConsultation")
+                .put("/join-consultation")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"userID\":" + optionalUserModel.getId() + ", \"consultationID\": " + optionalConsultation.getId() + "}")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
-        assertThat(consultationRepository.findAll()).anyMatch(consultation -> {
-            return consultation.getParticipants().size() == 1;
-        });
+        assertThat(consultationRepository.findAll()).anyMatch(consultation -> consultation.getParticipants().size() == 1);
     }
 
     @Test
@@ -82,11 +83,13 @@ public class RouteControllerTest {
     public void cancelConsultationParticipationAsParticipant() throws Exception {
         UserModel optionalUserModel = UserModel.builder()
                 .username("OptionalUser")
+                .email("optuser@cool.com")
+                .password("kacsa")
                 .level(Level.WEB)
                 .build();
         Consultation optionalConsultation = Consultation.builder()
                 .date(LocalDateTime.now())
-                .participants(new HashSet<>(Arrays.asList(optionalUserModel)))
+                .participants(new HashSet<>(List.of(optionalUserModel)))
                 .description("OptionalDesc")
                 .duration(30)
                 .participantLimit(10)
@@ -95,7 +98,7 @@ public class RouteControllerTest {
         optionalConsultation = consultationRepository.saveAndFlush(optionalConsultation);
         testEntityManager.clear();
         mvc.perform(MockMvcRequestBuilders
-                .post("/dropConsultation")
+                .delete("/consultation")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"userID\":" + optionalUserModel.getId() + "," +
                         " \"consultationID\": " + optionalConsultation.getId() + "}")
@@ -110,24 +113,30 @@ public class RouteControllerTest {
     public void creatingNewConsultationFromConsultationData() throws Exception {
         UserModel userModel = UserModel.builder()
                 .username("TestUser")
+                .email("optuser@cool.com")
+                .password("kacsa")
                 .level(Level.WEB)
                 .build();
+
         UserModel finalUserModel = userModelRepository.saveAndFlush(userModel);
+
         testEntityManager.clear();
+
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("date", LocalDateTime.of(2019, 10, 20, 10, 30));
-        jsonObject.put("subject", Arrays.asList(Subject.JAVA));
         jsonObject.put("hostID", finalUserModel.getId());
         jsonObject.put("duration", 10);
         jsonObject.put("participantLimit", 5);
         jsonObject.put("description", "TestDesc");
-        System.out.println(jsonObject.toString());
+        jsonObject.put("subjects", List.of(Subject.JAVA));
+
         mvc.perform(MockMvcRequestBuilders
-                .post("/createNewConsultation")
+                .post("/consultation")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(String.valueOf(jsonObject))
+                .content(jsonObject.toString())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+
         assertThat(consultationRepository.findAll()).anyMatch(consultation -> consultation.getHost().getId().equals(finalUserModel.getId()));
     }
 
@@ -145,7 +154,7 @@ public class RouteControllerTest {
         Consultation consi = consultationRepository.saveAndFlush(consultation);
 
         mvc.perform(MockMvcRequestBuilders
-                .get("/cancelConsultation/" + consi.getId())
+                .put("/cancel-consultation/" + consi.getId())
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
         assertThat(consultationRepository.findAll()).noneMatch(consultation1 -> consultation1.getId() == null);
