@@ -3,10 +3,13 @@ package com.codecool.coolzontations.repository;
 import com.codecool.coolzontations.model.Consultation;
 import com.codecool.coolzontations.model.Level;
 import com.codecool.coolzontations.model.UserModel;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.transaction.Transactional;
@@ -30,6 +33,12 @@ public class ConsultationRepositoryTest {
     @Autowired
     private TestEntityManager testEntityManager;
 
+    @BeforeEach
+    public void clear(){
+        userModelRepository.deleteAll();
+        consultationRepository.deleteAll();
+    }
+
     @Test
     public void saveOneConsultation() {
         Consultation consultation = Consultation.builder()
@@ -44,7 +53,7 @@ public class ConsultationRepositoryTest {
 
     }
 
-    //    @Test(expected = DataIntegrityViolationException.class)
+    @Test
     public void dateShouldBeNotNull() {
         Consultation consultation = Consultation.builder()
                 .participantLimit(3)
@@ -52,17 +61,21 @@ public class ConsultationRepositoryTest {
                 .duration(30)
                 .build();
 
-        consultationRepository.saveAndFlush(consultation);
+        Assertions.assertThrows(DataIntegrityViolationException.class, () -> consultationRepository.saveAndFlush(consultation));
     }
 
     @Test
     public void userPersistWithConsultation() {
         UserModel testUserModel1 = UserModel.builder()
                 .username("TestUser1")
+                .email("test1@cool.com")
+                .password("kacsa1")
                 .level(Level.WEB)
                 .build();
         UserModel testUserModel2 = UserModel.builder()
                 .username("TestUser2")
+                .email("test2@cool.com")
+                .password("kacsa2")
                 .level(Level.OOP)
                 .build();
 
@@ -76,7 +89,7 @@ public class ConsultationRepositoryTest {
 
         consultationRepository.save(testConsultation);
         List<UserModel> userModels = userModelRepository.findAll();
-        assertThat(userModels).allMatch(user -> user.getId() > 0L);
+        assertThat(userModels).allMatch(user -> user.getId() >= 0L);
 
     }
 
@@ -85,6 +98,8 @@ public class ConsultationRepositoryTest {
     public void getUserJoinedConsultations() {
         UserModel userModel = UserModel.builder()
                 .username("OptionalUser")
+                .email("optuser@cool.com")
+                .password("kacsa")
                 .level(Level.WEB)
                 .build();
         Consultation consultation = Consultation.builder()
@@ -96,13 +111,15 @@ public class ConsultationRepositoryTest {
                 .build();
         consultationRepository.saveAndFlush(consultation);
         testEntityManager.clear();
-        assertThat(consultationRepository.findAll()).anyMatch(consultation1 -> consultation1.getParticipants().contains(userModel));
+        assertThat(consultationRepository.findAll()).anyMatch(consultation1 -> consultation1.getParticipants().size() == 1);
     }
 
     @Test
     public void getUserHostedConsultations() {
         UserModel userModel = UserModel.builder()
                 .username("OptionalUser")
+                .email("optuser@cool.com")
+                .password("kacsa")
                 .level(Level.WEB)
                 .build();
         userModelRepository.saveAndFlush(userModel);
@@ -115,6 +132,6 @@ public class ConsultationRepositoryTest {
                 .build();
         consultationRepository.saveAndFlush(consultation);
         testEntityManager.clear();
-        assertThat(consultationRepository.findAll()).anyMatch(consultation1 -> consultation1.getHost().equals(userModel));
+        assertThat(consultationRepository.findAll()).anyMatch(consultation1 -> consultation1.getHost().getUsername().equals(userModel.getUsername()));
     }
 }
