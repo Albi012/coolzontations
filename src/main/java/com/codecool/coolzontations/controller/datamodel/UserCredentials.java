@@ -1,4 +1,4 @@
-package com.codecool.coolzontations.model;
+package com.codecool.coolzontations.controller.datamodel;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

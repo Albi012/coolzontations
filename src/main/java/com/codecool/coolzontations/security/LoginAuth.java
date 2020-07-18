@@ -1,6 +1,6 @@
 package com.codecool.coolzontations.security;
 
-import com.codecool.coolzontations.model.UserCredentials;
+import com.codecool.coolzontations.controller.datamodel.UserCredentials;
 import com.codecool.coolzontations.model.UserModel;
 import com.codecool.coolzontations.repository.UserModelRepository;
 import com.codecool.coolzontations.service.DataManger;
