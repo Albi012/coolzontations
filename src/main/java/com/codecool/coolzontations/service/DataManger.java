@@ -1,5 +1,8 @@
 package com.codecool.coolzontations.service;
 
+import com.codecool.coolzontations.controller.datamodel.ConsultationDataFromRequest;
+import com.codecool.coolzontations.controller.datamodel.DataFromRequest;
+import com.codecool.coolzontations.controller.datamodel.RegistrationUserModel;
 import com.codecool.coolzontations.model.*;
 import com.codecool.coolzontations.repository.ConsultationRepository;
 import com.codecool.coolzontations.repository.UserModelRepository;
@@ -8,7 +11,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;

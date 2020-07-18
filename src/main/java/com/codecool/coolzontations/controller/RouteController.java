@@ -1,5 +1,8 @@
 package com.codecool.coolzontations.controller;
 
+import com.codecool.coolzontations.controller.datamodel.ConsultationDataFromRequest;
+import com.codecool.coolzontations.controller.datamodel.DataFromRequest;
+import com.codecool.coolzontations.controller.datamodel.RegistrationUserModel;
 import com.codecool.coolzontations.model.*;
 import com.codecool.coolzontations.service.DataManger;
 import org.springframework.beans.factory.annotation.Autowired;
