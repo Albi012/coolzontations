@@ -2,6 +2,8 @@ package com.codecool.coolzontations.repository;
 
 import com.codecool.coolzontations.model.Level;
 import com.codecool.coolzontations.model.UserModel;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -21,13 +23,17 @@ public class UserModelRepositoryTest {
     @Autowired
     private UserModelRepository userModelRepository;
 
-    @Autowired
-    private TestEntityManager entityManager;
+    @BeforeEach
+    public void clear(){
+        userModelRepository.deleteAll();
+    }
 
     @Test
     public void saveOneUser(){
         UserModel testUserModel = UserModel.builder()
                 .username("TestUser")
+                .email("test1@cool.com")
+                .password("kacsa1")
                 .level(Level.OOP)
                 .build();
         userModelRepository.save(testUserModel);
@@ -35,10 +41,12 @@ public class UserModelRepositoryTest {
         assertThat(userModels).hasSize(1);
     }
 
-//    @Test(expected = DataIntegrityViolationException.class)
+    @Test
     public void saveUniqueFieldTwice(){
         UserModel testUserModel1 = UserModel.builder()
                 .username("TestUser")
+                .email("test1@cool.com")
+                .password("kacsa1")
                 .level(Level.OOP)
                 .build();
 
@@ -46,10 +54,12 @@ public class UserModelRepositoryTest {
 
         UserModel testUserModel2 = UserModel.builder()
                 .username("TestUser")
+                .email("test1@cool.com")
+                .password("kacsa1")
                 .level(Level.WEB)
                 .build();
 
-        userModelRepository.saveAndFlush(testUserModel2);
+        assertThrows(DataIntegrityViolationException.class, () -> userModelRepository.saveAndFlush(testUserModel2));
     }
 
     @Test
@@ -58,8 +68,7 @@ public class UserModelRepositoryTest {
                 .level(Level.WEB)
                 .build();
 
-        assertThrows(DataIntegrityViolationException.class,()->{
-            userModelRepository.saveAndFlush(userModel);});
+        assertThrows(DataIntegrityViolationException.class,()-> userModelRepository.saveAndFlush(userModel));
 
     }
 
