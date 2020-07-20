@@ -1,5 +1,6 @@
 package com.codecool.coolzontations.security;
 
+import com.codecool.coolzontations.model.Roles;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -27,14 +28,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .httpBasic().disable()
+//                .httpBasic().disable()
                 .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .sessionManagement()
+                    .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+                .addFilterAfter(new JwtTokenFilter(jwtTokenServices), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
-                .anyRequest().permitAll()
-                .and()
-                .addFilterBefore(new JwtTokenFilter(jwtTokenServices), UsernamePasswordAuthenticationFilter.class);
+                .antMatchers("/", "/auth/*" , "/registration").permitAll()
+                .antMatchers("/users").hasRole(Roles.ADMIN.toString())
+                .anyRequest()
+                    .authenticated();
     }
 
 }

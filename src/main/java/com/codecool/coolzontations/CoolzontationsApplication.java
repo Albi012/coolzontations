@@ -65,7 +65,8 @@ public class CoolzontationsApplication {
                     .username("myUser")
                     .level(Level.WEB)
                     .email("wer@rew.com")
-                    .password(passwordEncoder.encode("asd"))
+                    .password(passwordEncoder.encode("password"))
+                    .role(Roles.ADMIN)
                     .build();
 
             Set<Subject> subjects = new HashSet<>(Arrays.asList(Subject.JAVA, Subject.JAVASCRIPT, Subject.REACT));

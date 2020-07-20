@@ -72,6 +72,7 @@ public class LoginAuth {
         Map<String, Object> userDetails = new HashMap<>();
         userDetails.put("username", user.get().getUsername());
         userDetails.put("level", user.get().getLevel());
+        userDetails.put("role", user.get().getRoles());
         userDetails.put("id", user.get().getId());
         return userDetails;
     }
