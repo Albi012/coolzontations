@@ -48,10 +48,9 @@ public class UserModel {
     private String password;
 
     @Singular
-    @Enumerated(EnumType.STRING)
     @CollectionTable(name = "ROLES", joinColumns = @JoinColumn( name = "userID"))
     @ElementCollection(fetch = FetchType.EAGER)
-    private List<Roles> roles;
+    private List<String> roles;
 
     public void addConsultation(Consultation c){
         if(this.hostedConsultations == null){
@@ -62,7 +61,7 @@ public class UserModel {
     }
 
     public List<String> getRolesAsString(){
-        return this.roles.stream().map(Roles::toString).collect(Collectors.toList());
+        return this.roles;
     }
 
 

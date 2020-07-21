@@ -29,12 +29,6 @@ public class RouteController {
         return dataManger.findAllConsultation();
     }
 
-    @GetMapping("/users")
-    public List<UserModel> users(){
-        return dataManger.findAllUser();
-    }
-
-
     @GetMapping("/subjects")
     public List<Subject> subjects() {
         return Arrays.asList(Subject.values());

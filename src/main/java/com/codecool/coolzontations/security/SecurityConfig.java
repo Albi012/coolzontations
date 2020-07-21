@@ -10,6 +10,8 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import static com.codecool.coolzontations.model.Roles.ADMIN;
+
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -36,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(new JwtTokenFilter(jwtTokenServices), UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/", "/auth/*" , "/registration").permitAll()
-                .antMatchers("/users").hasRole(Roles.ADMIN.toString())
+                .antMatchers("/admin/**").hasRole(ADMIN.name())
                 .anyRequest()
                     .authenticated();
     }

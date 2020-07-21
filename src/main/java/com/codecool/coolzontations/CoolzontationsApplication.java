@@ -43,7 +43,7 @@ public class CoolzontationsApplication {
                     .level(Level.ADVANCE)
                     .email("asd@bsd.com")
                     .password(passwordEncoder.encode("password"))
-                    .role(Roles.USER)
+                    .role(Roles.USER.name())
                     .build();
 
 
@@ -66,7 +66,7 @@ public class CoolzontationsApplication {
                     .level(Level.WEB)
                     .email("wer@rew.com")
                     .password(passwordEncoder.encode("password"))
-                    .role(Roles.ADMIN)
+                    .role(Roles.ADMIN.name())
                     .build();
 
             Set<Subject> subjects = new HashSet<>(Arrays.asList(Subject.JAVA, Subject.JAVASCRIPT, Subject.REACT));
@@ -96,7 +96,7 @@ public class CoolzontationsApplication {
             c2.addParticipant(userModel3);
 
             Consultation c3 = Consultation.builder()
-                    .date(LocalDateTime.of(2019, 11, 25, 12, 30))
+                    .date(LocalDateTime.of(2021, 11, 25, 12, 30))
                     .duration(120)
                     .subjects(subjects)
                     .participantLimit(4)

@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -105,7 +106,8 @@ public class DataManger {
     }
 
     public List<Consultation> findAllConsultation() {
-        return consultationRepository.findAll();
+        LocalDateTime date = LocalDateTime.now();
+        return consultationRepository.findActiveConsultations(date);
     }
 
     public List<UserModel> findAllUser() {
@@ -120,5 +122,10 @@ public class DataManger {
     public List<Consultation> getConsultationsAsHost(Long id) {
         Optional<UserModel> user = userModelRepository.findById(id);
         return user.map(value -> consultationRepository.findAll().stream().filter(consultation -> consultation.getHost().equals(user.get())).collect(Collectors.toList())).orElseGet(ArrayList::new);
+    }
+
+    public List<Consultation> findArchivedConsultation() {
+        LocalDateTime date = LocalDateTime.now();
+        return consultationRepository.findArchivedConsultations(date);
     }
 }
