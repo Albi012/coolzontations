@@ -13,6 +13,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.ActiveProfiles;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -40,7 +41,23 @@ public class ConsultationRepositoryTest {
     }
 
     @Test
-    public void saveOneConsultation() {
+    public void showActiveConsultation() {
+        LocalDateTime now = LocalDateTime.now();
+        Consultation consultation = Consultation.builder()
+                .duration(30)
+                .date(LocalDateTime.of(2027, 12, 21, 10, 32))
+                .description("testDesc")
+                .participantLimit(4)
+                .build();
+        consultationRepository.save(consultation);
+        List<Consultation> consultations = consultationRepository.findActiveConsultations(now);
+        assertThat(consultations).hasSize(1);
+
+    }
+
+    @Test
+    public void showArchivedConsultation() {
+        LocalDateTime now = LocalDateTime.now();
         Consultation consultation = Consultation.builder()
                 .duration(30)
                 .date(LocalDateTime.of(2017, 12, 21, 10, 32))
@@ -48,7 +65,7 @@ public class ConsultationRepositoryTest {
                 .participantLimit(4)
                 .build();
         consultationRepository.save(consultation);
-        List<Consultation> consultations = consultationRepository.findAll();
+        List<Consultation> consultations = consultationRepository.findArchivedConsultations(now);
         assertThat(consultations).hasSize(1);
 
     }
@@ -61,7 +78,8 @@ public class ConsultationRepositoryTest {
                 .duration(30)
                 .build();
 
-        Assertions.assertThrows(DataIntegrityViolationException.class, () -> consultationRepository.saveAndFlush(consultation));
+        Assertions.assertThrows(DataIntegrityViolationException.class,
+                () -> consultationRepository.saveAndFlush(consultation));
     }
 
     @Test
@@ -94,7 +112,6 @@ public class ConsultationRepositoryTest {
     }
 
     @Test
-    @Transactional
     public void getUserJoinedConsultations() {
         UserModel userModel = UserModel.builder()
                 .username("OptionalUser")
@@ -111,7 +128,8 @@ public class ConsultationRepositoryTest {
                 .build();
         consultationRepository.saveAndFlush(consultation);
         testEntityManager.clear();
-        assertThat(consultationRepository.findAll()).anyMatch(consultation1 -> consultation1.getParticipants().size() == 1);
+        assertThat(consultationRepository.findAll())
+                .anyMatch(consultation1 -> consultation1.getParticipants().size() == 1);
     }
 
     @Test

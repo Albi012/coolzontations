@@ -28,6 +28,7 @@ public class DataManger {
     @Autowired
     private ConsultationRepository consultationRepository;
 
+    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
