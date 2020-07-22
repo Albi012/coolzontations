@@ -33,9 +33,7 @@ public class JwtTokenService {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    // Creates a JWT token
     public String createToken(String username, List<String> roles) {
-        // Add a custom field to the token
         Claims claims = Jwts.claims().setSubject(username);
         claims.put(rolesFieldName, roles);
 
@@ -53,12 +51,11 @@ public class JwtTokenService {
     String getTokenFromRequest(HttpServletRequest req) {
         String bearerToken = req.getHeader("Authorization");
         if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
-            return bearerToken.substring(7, bearerToken.length());
+            return bearerToken.replace("Bearer ", "");
         }
         return null;
     }
 
-    // checks if the token is valid and not expired.
     boolean validateToken(String token) {
         try {
             Jws<Claims> claims = Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token);
@@ -84,7 +81,7 @@ public class JwtTokenService {
         List<String> roles = (List<String>) body.get(rolesFieldName);
         List<SimpleGrantedAuthority> authorities = new LinkedList<>();
         for (String role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role));
+            authorities.add(new SimpleGrantedAuthority("ROLE_" + role));
         }
         return new UsernamePasswordAuthenticationToken(username, "", authorities);
     }

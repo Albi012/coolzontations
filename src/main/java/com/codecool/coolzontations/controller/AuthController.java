@@ -16,7 +16,6 @@ public class AuthController {
 
     @PostMapping("/sign-in")
     public ResponseEntity signin(@RequestBody UserCredentials data) {
-        System.out.println(data);
         return loginAuth.authenticationValiadtion(data);
     }
 

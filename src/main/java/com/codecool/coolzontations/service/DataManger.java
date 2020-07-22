@@ -28,7 +28,6 @@ public class DataManger {
     @Autowired
     private ConsultationRepository consultationRepository;
 
-    @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
@@ -87,15 +86,8 @@ public class DataManger {
         }
     }
 
-    @Transactional
     public String cancelConsultation(Long id) {
         Consultation consultation = consultationRepository.findById(id).orElseThrow();
-//        UserModel user = userModelRepository.findById(dataFromRequest.getUserID()).orElseThrow();
-//        user.removeHostedConsultatuin(consultation);
-//        userModelRepository.saveAndFlush(user);
-//        consultation.removeHost();
-//        consultation.getParticipants().clear();
-//        consultationRepository.saveAndFlush(consultation);
         consultationRepository.delete(consultation);
         return "Consultation was successfully deleted from the system!";
 

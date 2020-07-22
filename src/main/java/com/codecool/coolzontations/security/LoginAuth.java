@@ -39,8 +39,9 @@ public class LoginAuth {
     public ResponseEntity authenticationValiadtion(@RequestBody UserCredentials data) {
         try {
             String username = data.getUsername();
-            // authenticationManager.authenticate calls loadUserByUsername in CustomUserDetailsService
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
+            String password = data.getPassword();
+
+            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             List<String> roles = getUserRoles(authentication);
             String token = jwtTokenServices.createToken(username, roles);
             Optional<UserModel> user = dataManger.findUserByUsername(username);
