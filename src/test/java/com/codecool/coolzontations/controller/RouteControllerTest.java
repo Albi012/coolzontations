@@ -6,6 +6,7 @@ import com.codecool.coolzontations.model.Subject;
 import com.codecool.coolzontations.model.UserModel;
 import com.codecool.coolzontations.repository.ConsultationRepository;
 import com.codecool.coolzontations.repository.UserModelRepository;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -140,8 +141,9 @@ public class RouteControllerTest {
         jsonObject.put("duration", 10);
         jsonObject.put("participantLimit", 5);
         jsonObject.put("description", "TestDesc");
-        jsonObject.put("subjects", List.of(Subject.JAVA));
+        jsonObject.put("subjects", new JSONArray(List.of(Subject.JAVA)));
 
+        System.out.println(jsonObject.toString());
         mvc.perform(MockMvcRequestBuilders
                 .post("/consultation")
                 .contentType(MediaType.APPLICATION_JSON)

@@ -1,11 +1,12 @@
 package com.codecool.coolzontations.controller;
 
-import com.codecool.coolzontations.controller.datamodel.ConsultationDataFromRequest;
-import com.codecool.coolzontations.controller.datamodel.DataFromRequest;
-import com.codecool.coolzontations.controller.datamodel.RegistrationUserModel;
+import com.codecool.coolzontations.controller.dto.ConsultationDataFromRequest;
+import com.codecool.coolzontations.controller.dto.DataFromRequest;
+import com.codecool.coolzontations.controller.dto.RegistrationUserModel;
 import com.codecool.coolzontations.model.*;
 import com.codecool.coolzontations.service.DataManger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -20,12 +21,12 @@ public class RouteController {
 
 
     @PostMapping("/registration")
-    public String userRegistration(@RequestBody RegistrationUserModel registrationUserModel){
+    public ResponseEntity userRegistration(@RequestBody RegistrationUserModel registrationUserModel){
         return dataManger.userReg(registrationUserModel);
     }
 
     @GetMapping("/consultations")
-    public List<Consultation> consultations(){
+    public ResponseEntity<List<Consultation>> consultations(){
         return dataManger.findAllConsultation();
     }
 

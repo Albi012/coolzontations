@@ -15,7 +15,7 @@ public interface ConsultationRepository extends JpaRepository<Consultation, Long
     List<Consultation> findActiveConsultations(@Param("date") LocalDateTime date);
 
     @Query("SELECT c FROM Consultation c WHERE c.date < :date ORDER BY c.date ")
-        List<Consultation> findArchivedConsultations(@Param("date") LocalDateTime date);
+    List<Consultation> findArchivedConsultations(@Param("date") LocalDateTime date);
 
 
 

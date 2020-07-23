@@ -1,6 +1,8 @@
 package com.codecool.coolzontations.model;
 
+import com.codecool.coolzontations.controller.dto.PublicModel;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.*;
 
@@ -16,6 +18,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -42,16 +45,21 @@ public class Consultation {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     @JoinTable(name = "hosted_consultations")
-    @JsonManagedReference
+    @JsonIgnore
     private UserModel host;
 
+    @Transient
+    private PublicModel publicHost;
+
+    @Transient
+    private List<PublicModel> publicParticipants;
 
     @ManyToMany(cascade = {CascadeType.PERSIST})
     @JoinTable(name =  "user_consultation_as_participant",
             joinColumns = {@JoinColumn(name = "consultationID")},
             inverseJoinColumns = { @JoinColumn(name = "userID")})
-    @JsonManagedReference
     @ToString.Exclude
+    @JsonIgnore
     private Set<UserModel> participants = new HashSet<>();
 
     @Column(nullable = false)
@@ -88,7 +96,5 @@ public class Consultation {
         this.participants.remove(userModel);
     }
 
-    public void removeHost(){
-        this.host = null;
-    }
+
 }

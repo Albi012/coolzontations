@@ -1,18 +1,19 @@
 package com.codecool.coolzontations.service;
 
-import com.codecool.coolzontations.controller.datamodel.ConsultationDataFromRequest;
-import com.codecool.coolzontations.controller.datamodel.DataFromRequest;
-import com.codecool.coolzontations.controller.datamodel.RegistrationUserModel;
+import com.codecool.coolzontations.controller.dto.ConsultationDataFromRequest;
+import com.codecool.coolzontations.controller.dto.DataFromRequest;
+import com.codecool.coolzontations.controller.dto.PublicModel;
+import com.codecool.coolzontations.controller.dto.RegistrationUserModel;
 import com.codecool.coolzontations.model.*;
 import com.codecool.coolzontations.repository.ConsultationRepository;
 import com.codecool.coolzontations.repository.UserModelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,9 @@ public class DataManger {
 
     @Autowired
     private ConsultationRepository consultationRepository;
+
+    @Autowired
+    private ModelWrapper modelWrapper;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -68,7 +72,7 @@ public class DataManger {
         consultationRepository.saveAndFlush(consultation);
     }
 
-    public String userReg(RegistrationUserModel registrationUserModel) {
+    public ResponseEntity userReg(RegistrationUserModel registrationUserModel) {
         if (!userModelRepository.existsByUsername(registrationUserModel.getUsername())) {
             if (!userModelRepository.existsByEmail(registrationUserModel.getEmail())) {
                 UserModel userModel = UserModel.builder()
@@ -78,12 +82,12 @@ public class DataManger {
                         .password(passwordEncoder().encode(registrationUserModel.getPassword1()))
                         .build();
                 userModelRepository.save(userModel);
-                return "OK";
+                return ResponseEntity.ok().build();
             } else {
-                return "Email already in use";
+                return ResponseEntity.unprocessableEntity().body("Email is already registered");
             }
         } else {
-            return "Username already in use";
+            return ResponseEntity.unprocessableEntity().body("Username already taken.");
         }
     }
 
@@ -98,9 +102,22 @@ public class DataManger {
         return userModelRepository.findByUsername(username);
     }
 
-    public List<Consultation> findAllConsultation() {
+    public ResponseEntity<List<Consultation>> findAllConsultation() {
         LocalDateTime date = LocalDateTime.now();
-        return consultationRepository.findActiveConsultations(date);
+        List<Consultation> consultations = consultationRepository.findActiveConsultations(date);
+        mapConsultationsUsersToPublicUsers(consultations);
+        return ResponseEntity.ok().body(consultations);
+    }
+
+    private void mapConsultationsUsersToPublicUsers(List<Consultation> consultations) {
+        for (Consultation consultation : consultations) {
+            ArrayList<PublicModel> publicModels = new ArrayList<>();
+            consultation.setPublicHost(modelWrapper.userModelToParticipantMapper(consultation.getHost()));
+            for (UserModel participant : consultation.getParticipants()) {
+                publicModels.add(modelWrapper.userModelToParticipantMapper(participant));
+            }
+            consultation.setPublicParticipants(publicModels);
+        }
     }
 
     public List<UserModel> findAllUser() {
@@ -121,4 +138,5 @@ public class DataManger {
         LocalDateTime date = LocalDateTime.now();
         return consultationRepository.findArchivedConsultations(date);
     }
+
 }

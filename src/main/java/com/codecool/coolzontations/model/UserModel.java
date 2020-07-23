@@ -60,11 +60,6 @@ public class UserModel {
         this.hostedConsultations.add(c);
     }
 
-    public List<String> getRolesAsString(){
-        return this.roles;
-    }
-
-
     public void removeHostedConsultatuin(Consultation consultation){
         this.hostedConsultations.remove(consultation);
     }

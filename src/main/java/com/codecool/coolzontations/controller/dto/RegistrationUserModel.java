@@ -1,4 +1,4 @@
-package com.codecool.coolzontations.controller.datamodel;
+package com.codecool.coolzontations.controller.dto;
 
 
 import com.codecool.coolzontations.model.Level;

@@ -29,6 +29,6 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("Username: " + username + " not found"));
 
         return new User(user.getUsername(), user.getPassword(),
-                user.getRolesAsString().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
+                user.getRoles().stream().map(SimpleGrantedAuthority::new).collect(Collectors.toList()));
     }
 }
