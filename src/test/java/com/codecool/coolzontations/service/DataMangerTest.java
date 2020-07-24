@@ -1,8 +1,10 @@
 package com.codecool.coolzontations.service;
 
+import com.codecool.coolzontations.controller.dto.ConsultationDataFromRequest;
 import com.codecool.coolzontations.controller.dto.DataFromRequest;
 import com.codecool.coolzontations.model.Consultation;
 import com.codecool.coolzontations.model.Level;
+import com.codecool.coolzontations.model.Subject;
 import com.codecool.coolzontations.model.UserModel;
 import com.codecool.coolzontations.repository.ConsultationRepository;
 import com.codecool.coolzontations.repository.UserModelRepository;
@@ -17,11 +19,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.ResponseEntity;
 
 import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
+import static com.codecool.coolzontations.model.Subject.CSHARP;
+import static com.codecool.coolzontations.model.Subject.JAVA;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -111,6 +112,66 @@ class DataMangerTest {
 
         verify(userModelRepository, times(1)).findById(anyLong());
         verify(consultationRepository, times(1)).findById(anyLong());
+
+    }
+
+    @Test
+    void newConsultation(){
+        UserModel userModel1 = UserModel.builder()
+                .username("OptionalUser1")
+                .email("optuser1@cool.com")
+                .password("kacsa")
+                .level(Level.WEB)
+                .build();
+
+        Consultation mockConsultation = Consultation.builder()
+                .date(LocalDateTime.now())
+                .description("testDesc")
+                .duration(30)
+                .participantLimit(1)
+                .participants(Set.of(userModel1))
+                .build();
+
+
+        ConsultationDataFromRequest consultation = new ConsultationDataFromRequest();
+        consultation.setDate(LocalDateTime.now());
+        consultation.setDescription("Test description");
+        consultation.setDuration(30);
+        consultation.setHostID(2L);
+        consultation.setParticipantLimit(3);
+        consultation.setSubjects(List.of(JAVA.name(), CSHARP.name()));
+
+        when(userModelRepository.findById(2L)).thenReturn(Optional.of(userModel1));
+        when(consultationRepository.saveAndFlush(mockConsultation)).thenReturn(mockConsultation);
+
+
+        ResponseEntity response = dataManger.createNewConsultation(consultation);
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+
+        verify(userModelRepository, times(1)).findById(anyLong());
+        verify(consultationRepository, times(1)).saveAndFlush(any());
+
+    }
+
+    @Test
+    void failedToCreateNewConsultation(){
+        UserModel userModel1 = UserModel.builder()
+                .username("OptionalUser1")
+                .email("optuser1@cool.com")
+                .password("kacsa")
+                .level(Level.WEB)
+                .build();
+
+        ConsultationDataFromRequest consultation = new ConsultationDataFromRequest();
+        consultation.setHostID(2L);
+
+        when(userModelRepository.findById(2L)).thenReturn(Optional.of(userModel1));
+
+
+        ResponseEntity response = dataManger.createNewConsultation(consultation);
+        assertThat(response.getStatusCodeValue()).isEqualTo(422);
+
+        verify(userModelRepository, times(1)).findById(anyLong());
 
     }
 }

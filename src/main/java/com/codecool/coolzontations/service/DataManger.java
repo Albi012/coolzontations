@@ -59,17 +59,22 @@ public class DataManger {
         return ResponseEntity.unprocessableEntity().body("Delete process was aborted.");
     }
 
-    public void createNewConsultation(ConsultationDataFromRequest consultationDataFromRequest) {
+    public ResponseEntity createNewConsultation(ConsultationDataFromRequest consultationDataFromRequest) {
         UserModel host = userModelRepository.findById(consultationDataFromRequest.getHostID()).orElseThrow();
-        Consultation consultation = Consultation.builder()
-                .date(consultationDataFromRequest.getDate())
-                .subjects(consultationDataFromRequest.getAllSubjects())
-                .host(host)
-                .duration(consultationDataFromRequest.getDuration())
-                .participantLimit(consultationDataFromRequest.getParticipantLimit())
-                .description(consultationDataFromRequest.getDescription())
-                .build();
-        consultationRepository.saveAndFlush(consultation);
+        try {
+            Consultation consultation = Consultation.builder()
+                    .date(consultationDataFromRequest.getDate())
+                    .subjects(consultationDataFromRequest.getAllSubjects())
+                    .host(host)
+                    .duration(consultationDataFromRequest.getDuration())
+                    .participantLimit(consultationDataFromRequest.getParticipantLimit())
+                    .description(consultationDataFromRequest.getDescription())
+                    .build();
+            consultationRepository.saveAndFlush(consultation);
+            return ResponseEntity.ok(consultation);
+        } catch (Exception e){
+            return ResponseEntity.unprocessableEntity().body("Cannot create consultation.");
+        }
     }
 
     public ResponseEntity userReg(RegistrationUserModel registrationUserModel) {

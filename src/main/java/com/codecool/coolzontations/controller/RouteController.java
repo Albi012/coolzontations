@@ -36,8 +36,8 @@ public class RouteController {
     }
 
     @PostMapping("/consultation")
-    public void createNewConsultation(@RequestBody ConsultationDataFromRequest consultationDataFromRequest){
-        dataManger.createNewConsultation(consultationDataFromRequest);
+    public ResponseEntity createNewConsultation(@RequestBody ConsultationDataFromRequest consultationDataFromRequest){
+       return dataManger.createNewConsultation(consultationDataFromRequest);
     }
 
     @PutMapping("/join-consultation")
