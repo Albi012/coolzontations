@@ -46,7 +46,7 @@ public class RouteController {
     }
 
     @PutMapping("/cancel-consultation/{id}")
-    public String cancelConsultation(@PathVariable("id") Long id){
+    public ResponseEntity cancelConsultation(@PathVariable("id") Long id){
         return dataManger.cancelConsultation(id);
     }
 

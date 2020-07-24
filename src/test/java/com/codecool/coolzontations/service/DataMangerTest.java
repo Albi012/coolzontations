@@ -245,4 +245,30 @@ class DataMangerTest {
         verify(userModelRepository, times(0)).save(any());
 
     }
+
+    @Test
+    void cancelConsultation(){
+        when(consultationRepository.findById(anyLong())).thenReturn(Optional.of(new Consultation()));
+        doNothing().when(consultationRepository).delete(any());
+
+        ResponseEntity response = dataManger.cancelConsultation(2L);
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+
+        verify(consultationRepository, times(1)).findById(anyLong());
+        verify(consultationRepository, times(1)).delete(any());
+
+    }
+
+    @Test
+    void failedToCancelConsultation(){
+        when(consultationRepository.findById(anyLong())).thenReturn(null);
+        doNothing().when(consultationRepository).delete(any());
+
+        ResponseEntity response = dataManger.cancelConsultation(2L);
+        assertThat(response.getStatusCodeValue()).isEqualTo(422);
+
+        verify(consultationRepository, times(1)).findById(anyLong());
+        verify(consultationRepository, times(0)).delete(any());
+
+    }
 }

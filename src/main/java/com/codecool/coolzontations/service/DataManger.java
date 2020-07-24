@@ -96,10 +96,14 @@ public class DataManger {
         }
     }
 
-    public String cancelConsultation(Long id) {
-        Consultation consultation = consultationRepository.findById(id).orElseThrow();
-        consultationRepository.delete(consultation);
-        return "Consultation was successfully deleted from the system!";
+    public ResponseEntity cancelConsultation(Long id) {
+        try{
+            Consultation consultation = consultationRepository.findById(id).orElseThrow();
+            consultationRepository.delete(consultation);
+            return ResponseEntity.ok().body("Successful");
+        } catch(Exception e){
+            return ResponseEntity.unprocessableEntity().body("No consultation for this id: " + id);
+        }
 
     }
 
