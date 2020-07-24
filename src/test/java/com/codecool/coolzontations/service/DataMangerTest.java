@@ -2,6 +2,7 @@ package com.codecool.coolzontations.service;
 
 import com.codecool.coolzontations.controller.dto.ConsultationDataFromRequest;
 import com.codecool.coolzontations.controller.dto.DataFromRequest;
+import com.codecool.coolzontations.controller.dto.RegistrationUserModel;
 import com.codecool.coolzontations.model.Consultation;
 import com.codecool.coolzontations.model.Level;
 import com.codecool.coolzontations.model.Subject;
@@ -21,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import java.time.LocalDateTime;
 import java.util.*;
 
+import static com.codecool.coolzontations.model.Level.WEB;
 import static com.codecool.coolzontations.model.Subject.CSHARP;
 import static com.codecool.coolzontations.model.Subject.JAVA;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,7 +59,7 @@ class DataMangerTest {
                 .username("OptionalUser")
                 .email("optuser@cool.com")
                 .password("kacsa")
-                .level(Level.WEB)
+                .level(WEB)
                 .build();
 
 
@@ -82,7 +84,7 @@ class DataMangerTest {
                 .username("OptionalUser1")
                 .email("optuser1@cool.com")
                 .password("kacsa")
-                .level(Level.WEB)
+                .level(WEB)
                 .build();
 
         Consultation consultation = Consultation.builder()
@@ -98,7 +100,7 @@ class DataMangerTest {
                 .username("OptionalUser2")
                 .email("optuser2@cool.com")
                 .password("kacsa")
-                .level(Level.WEB)
+                .level(WEB)
                 .build();
 
 
@@ -121,7 +123,7 @@ class DataMangerTest {
                 .username("OptionalUser1")
                 .email("optuser1@cool.com")
                 .password("kacsa")
-                .level(Level.WEB)
+                .level(WEB)
                 .build();
 
         Consultation mockConsultation = Consultation.builder()
@@ -159,7 +161,7 @@ class DataMangerTest {
                 .username("OptionalUser1")
                 .email("optuser1@cool.com")
                 .password("kacsa")
-                .level(Level.WEB)
+                .level(WEB)
                 .build();
 
         ConsultationDataFromRequest consultation = new ConsultationDataFromRequest();
@@ -172,6 +174,75 @@ class DataMangerTest {
         assertThat(response.getStatusCodeValue()).isEqualTo(422);
 
         verify(userModelRepository, times(1)).findById(anyLong());
+
+    }
+
+    @Test
+    void userRegistration(){
+        RegistrationUserModel registrationUserModel = new RegistrationUserModel();
+        registrationUserModel.setEmail("newuser@user.com");
+        registrationUserModel.setLevel(WEB);
+        registrationUserModel.setPassword1("asd1");
+        registrationUserModel.setPassword2("asd1");
+        registrationUserModel.setUsername("user");
+
+        when(userModelRepository.existsByUsername(anyString())).thenReturn(false);
+        when(userModelRepository.existsByEmail(anyString())).thenReturn(false);
+        when(userModelRepository.save(any())).thenReturn(any());
+
+        ResponseEntity response = dataManger.userReg(registrationUserModel);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(200);
+
+        verify(userModelRepository, times(1)).existsByEmail(anyString());
+        verify(userModelRepository, times(1)).existsByUsername(anyString());
+        verify(userModelRepository, times(1)).save(any());
+
+    }
+
+    @Test
+    void userRegistrationFailedBecauseUsernameAlreadyExist(){
+        RegistrationUserModel registrationUserModel = new RegistrationUserModel();
+        registrationUserModel.setEmail("newuser@user.com");
+        registrationUserModel.setLevel(WEB);
+        registrationUserModel.setPassword1("asd1");
+        registrationUserModel.setPassword2("asd1");
+        registrationUserModel.setUsername("user");
+
+        when(userModelRepository.existsByUsername(anyString())).thenReturn(true);
+        when(userModelRepository.existsByEmail(anyString())).thenReturn(false);
+        when(userModelRepository.save(any())).thenReturn(any());
+
+        ResponseEntity response = dataManger.userReg(registrationUserModel);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(422);
+
+        verify(userModelRepository, times(1)).existsByUsername(anyString());
+        verify(userModelRepository, times(0)).existsByEmail(anyString());
+        verify(userModelRepository, times(0)).save(any());
+
+    }
+
+    @Test
+    void userRegistrationFailedBecauseEmailAlreadyExist(){
+        RegistrationUserModel registrationUserModel = new RegistrationUserModel();
+        registrationUserModel.setEmail("newuser@user.com");
+        registrationUserModel.setLevel(WEB);
+        registrationUserModel.setPassword1("asd1");
+        registrationUserModel.setPassword2("asd1");
+        registrationUserModel.setUsername("user");
+
+        when(userModelRepository.existsByUsername(anyString())).thenReturn(false);
+        when(userModelRepository.existsByEmail(anyString())).thenReturn(true);
+        when(userModelRepository.save(any())).thenReturn(any());
+
+        ResponseEntity response = dataManger.userReg(registrationUserModel);
+
+        assertThat(response.getStatusCodeValue()).isEqualTo(422);
+
+        verify(userModelRepository, times(1)).existsByUsername(anyString());
+        verify(userModelRepository, times(1)).existsByEmail(anyString());
+        verify(userModelRepository, times(0)).save(any());
 
     }
 }
