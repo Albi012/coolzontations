@@ -1,8 +1,8 @@
 package com.codecool.coolzontations.service.exceptions;
 
-public class UserNotFoundException extends RuntimeException {
+public class UserIdNotFoundException extends RuntimeException {
 
-    public UserNotFoundException(Long userID) {
+    public UserIdNotFoundException(Long userID) {
         super("User could not find: " + userID);
     }
 }
