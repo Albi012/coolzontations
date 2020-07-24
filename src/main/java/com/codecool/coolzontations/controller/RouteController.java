@@ -41,7 +41,7 @@ public class RouteController {
     }
 
     @PutMapping("/join-consultation")
-    public boolean addParticipantToConsultation(@RequestBody DataFromRequest dataFromRequest) {
+    public ResponseEntity addParticipantToConsultation(@RequestBody DataFromRequest dataFromRequest) {
         return dataManger.joinConsultation(dataFromRequest);
     }
 
@@ -51,7 +51,7 @@ public class RouteController {
     }
 
     @DeleteMapping("/consultation")
-    public boolean removeParticipantFromConsultation(@RequestBody DataFromRequest dataFromRequest ) {
+    public ResponseEntity removeParticipantFromConsultation(@RequestBody DataFromRequest dataFromRequest ) {
         return dataManger.removeParticipantFromConsultation(dataFromRequest);
     }
 

@@ -37,26 +37,26 @@ public class DataManger {
         return new BCryptPasswordEncoder();
     }
 
-    public boolean joinConsultation(DataFromRequest dataFromRequest) {
+    public ResponseEntity joinConsultation(DataFromRequest dataFromRequest) {
         UserModel userModel = userModelRepository.findById(dataFromRequest.getUserID()).orElseThrow();
         Consultation consultation = consultationRepository.findById(dataFromRequest.getConsultationID()).orElseThrow();
         if (consultation.getParticipantLimit() > consultation.getParticipants().size()) {
             consultation.addParticipant(userModel);
             consultationRepository.saveAndFlush(consultation);
-            return true;
+            return ResponseEntity.ok("Successful join.");
         }
-        return false;
+        return ResponseEntity.unprocessableEntity().body("Consultation is full.");
     }
 
-    public boolean removeParticipantFromConsultation(DataFromRequest dataFromRequest) {
+    public ResponseEntity removeParticipantFromConsultation(DataFromRequest dataFromRequest) {
         UserModel userModel = userModelRepository.findById(dataFromRequest.getUserID()).orElseThrow();
         Consultation consultation = consultationRepository.findById(dataFromRequest.getConsultationID()).orElseThrow();
         if (consultation.getParticipants().contains(userModel)) {
             consultation.removeParticipant(userModel);
             consultationRepository.saveAndFlush(consultation);
-            return true;
+            return ResponseEntity.ok("Successful delete.");
         }
-        return false;
+        return ResponseEntity.unprocessableEntity().body("Delete process was aborted.");
     }
 
     public void createNewConsultation(ConsultationDataFromRequest consultationDataFromRequest) {
