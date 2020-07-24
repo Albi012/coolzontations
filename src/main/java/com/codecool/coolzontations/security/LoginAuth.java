@@ -3,7 +3,8 @@ package com.codecool.coolzontations.security;
 import com.codecool.coolzontations.controller.dto.UserCredentials;
 import com.codecool.coolzontations.model.UserModel;
 import com.codecool.coolzontations.repository.UserModelRepository;
-import com.codecool.coolzontations.service.DataManger;
+import com.codecool.coolzontations.service.ConsultationDataService;
+import com.codecool.coolzontations.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,7 +30,7 @@ public class LoginAuth {
     private final JwtTokenService jwtTokenServices;
 
     @Autowired
-    private DataManger dataManger;
+    private UserDataService userDataService;
 
     public LoginAuth(AuthenticationManager authenticationManager, JwtTokenService jwtTokenServices, UserModelRepository users) {
         this.authenticationManager = authenticationManager;
@@ -44,7 +45,7 @@ public class LoginAuth {
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
             List<String> roles = getUserRoles(authentication);
             String token = jwtTokenServices.createToken(username, roles);
-            Optional<UserModel> user = dataManger.findUserByUsername(username);
+            UserModel user = userDataService.findUserByUsername(username);
             Map<String, Object> userDetails = mapUserDetails(user);
             Map<Object, Object> model = authModelBuilder(token, userDetails);
 
@@ -69,12 +70,12 @@ public class LoginAuth {
         return model;
     }
 
-    private Map<String, Object> mapUserDetails(Optional<UserModel> user) {
+    private Map<String, Object> mapUserDetails(UserModel user) {
         Map<String, Object> userDetails = new HashMap<>();
-        userDetails.put("username", user.get().getUsername());
-        userDetails.put("level", user.get().getLevel());
-        userDetails.put("role", user.get().getRoles());
-        userDetails.put("id", user.get().getId());
+        userDetails.put("username", user.getUsername());
+        userDetails.put("level", user.getLevel());
+        userDetails.put("role", user.getRoles());
+        userDetails.put("id", user.getId());
         return userDetails;
     }
 }

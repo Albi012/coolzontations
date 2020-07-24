@@ -4,9 +4,9 @@ import com.codecool.coolzontations.controller.dto.ConsultationDataFromRequest;
 import com.codecool.coolzontations.controller.dto.DataFromRequest;
 import com.codecool.coolzontations.controller.dto.RegistrationUserModel;
 import com.codecool.coolzontations.model.*;
-import com.codecool.coolzontations.service.DataManger;
+import com.codecool.coolzontations.service.ConsultationDataService;
+import com.codecool.coolzontations.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Arrays;
@@ -17,17 +17,20 @@ import java.util.List;
 public class RouteController {
 
    @Autowired
-   private DataManger dataManger;
+   private ConsultationDataService consultationDataService;
 
+
+   @Autowired
+   private UserDataService userDataService;
 
     @PostMapping("/registration")
-    public ResponseEntity userRegistration(@RequestBody RegistrationUserModel registrationUserModel){
-        return dataManger.userReg(registrationUserModel);
+    public UserModel userRegistration(@RequestBody RegistrationUserModel registrationUserModel){
+        return userDataService.userReg(registrationUserModel);
     }
 
     @GetMapping("/consultations")
-    public ResponseEntity<List<Consultation>> consultations(){
-        return dataManger.findAllConsultation();
+    public List<Consultation> consultations(){
+        return consultationDataService.findAllConsultation();
     }
 
     @GetMapping("/subjects")
@@ -36,33 +39,33 @@ public class RouteController {
     }
 
     @PostMapping("/consultation")
-    public ResponseEntity createNewConsultation(@RequestBody ConsultationDataFromRequest consultationDataFromRequest){
-       return dataManger.createNewConsultation(consultationDataFromRequest);
+    public Consultation createNewConsultation(@RequestBody ConsultationDataFromRequest consultationDataFromRequest){
+       return consultationDataService.createNewConsultation(consultationDataFromRequest);
     }
 
     @PutMapping("/join-consultation")
-    public ResponseEntity addParticipantToConsultation(@RequestBody DataFromRequest dataFromRequest) {
-        return dataManger.joinConsultation(dataFromRequest);
+    public Consultation addParticipantToConsultation(@RequestBody DataFromRequest dataFromRequest) {
+        return consultationDataService.joinConsultation(dataFromRequest);
     }
 
     @PutMapping("/cancel-consultation/{id}")
-    public ResponseEntity cancelConsultation(@PathVariable("id") Long id){
-        return dataManger.cancelConsultation(id);
+    public void cancelConsultation(@PathVariable("id") Long id){
+        consultationDataService.cancelConsultation(id);
     }
 
     @DeleteMapping("/consultation")
-    public ResponseEntity removeParticipantFromConsultation(@RequestBody DataFromRequest dataFromRequest ) {
-        return dataManger.removeParticipantFromConsultation(dataFromRequest);
+    public Consultation removeParticipantFromConsultation(@RequestBody DataFromRequest dataFromRequest ) {
+        return consultationDataService.removeParticipantFromConsultation(dataFromRequest);
     }
 
     @GetMapping("/consultations-as-participant/{id}")
     public List<Consultation> consultationsAsParticipant(@PathVariable("id") Long id){
-        return dataManger.getConsultationsAsParticipant(id);
+        return consultationDataService.getConsultationsAsParticipant(id);
     }
 
     @GetMapping("/consultations-as-host/{id}")
     public List<Consultation> consultationsAsHost(@PathVariable("id") Long id){
-        return dataManger.getConsultationsAsHost(id);
+        return consultationDataService.getConsultationsAsHost(id);
     }
 
 

@@ -2,7 +2,8 @@ package com.codecool.coolzontations.controller;
 
 import com.codecool.coolzontations.model.Consultation;
 import com.codecool.coolzontations.model.UserModel;
-import com.codecool.coolzontations.service.DataManger;
+import com.codecool.coolzontations.service.ConsultationDataService;
+import com.codecool.coolzontations.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,15 +18,18 @@ import java.util.List;
 public class AdminController {
 
     @Autowired
-    private DataManger dataManger;
+    private ConsultationDataService consultationDataService;
+
+    @Autowired
+    private UserDataService userDataService;
 
     @GetMapping("/users")
     public List<UserModel> users(){
-        return dataManger.findAllUser();
+        return userDataService.findAllUser();
     }
 
     @GetMapping("/archived-consultations")
     public List<Consultation> consultations(){
-        return dataManger.findArchivedConsultation();
+        return consultationDataService.findArchivedConsultation();
     }
 }
