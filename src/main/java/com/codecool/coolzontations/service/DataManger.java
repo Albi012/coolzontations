@@ -7,6 +7,8 @@ import com.codecool.coolzontations.controller.dto.RegistrationUserModel;
 import com.codecool.coolzontations.model.*;
 import com.codecool.coolzontations.repository.ConsultationRepository;
 import com.codecool.coolzontations.repository.UserModelRepository;
+import com.codecool.coolzontations.service.exceptions.ConsultationNotFoundException;
+import com.codecool.coolzontations.service.exceptions.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
@@ -38,8 +40,10 @@ public class DataManger {
     }
 
     public ResponseEntity joinConsultation(DataFromRequest dataFromRequest) {
-        UserModel userModel = userModelRepository.findById(dataFromRequest.getUserID()).orElseThrow();
-        Consultation consultation = consultationRepository.findById(dataFromRequest.getConsultationID()).orElseThrow();
+        Long userID = dataFromRequest.getUserID();
+        UserModel userModel = userModelRepository.findById(userID).orElseThrow(() -> new UserNotFoundException(userID));
+        Long consultationID = dataFromRequest.getConsultationID();
+        Consultation consultation = consultationRepository.findById(consultationID).orElseThrow(() -> new ConsultationNotFoundException(consultationID));
         if (consultation.getParticipantLimit() > consultation.getParticipants().size()) {
             consultation.addParticipant(userModel);
             consultationRepository.saveAndFlush(consultation);
@@ -49,8 +53,10 @@ public class DataManger {
     }
 
     public ResponseEntity removeParticipantFromConsultation(DataFromRequest dataFromRequest) {
-        UserModel userModel = userModelRepository.findById(dataFromRequest.getUserID()).orElseThrow();
-        Consultation consultation = consultationRepository.findById(dataFromRequest.getConsultationID()).orElseThrow();
+        Long userID = dataFromRequest.getUserID();
+        UserModel userModel = userModelRepository.findById(userID).orElseThrow(() -> new UserNotFoundException(userID));
+        Long consultationID = dataFromRequest.getConsultationID();
+        Consultation consultation = consultationRepository.findById(consultationID).orElseThrow(() -> new ConsultationNotFoundException(consultationID));
         if (consultation.getParticipants().contains(userModel)) {
             consultation.removeParticipant(userModel);
             consultationRepository.saveAndFlush(consultation);
@@ -60,7 +66,8 @@ public class DataManger {
     }
 
     public ResponseEntity createNewConsultation(ConsultationDataFromRequest consultationDataFromRequest) {
-        UserModel host = userModelRepository.findById(consultationDataFromRequest.getHostID()).orElseThrow();
+        Long userID = consultationDataFromRequest.getHostID();
+        UserModel host = userModelRepository.findById(userID).orElseThrow(() -> new UserNotFoundException(userID));
         try {
             Consultation consultation = Consultation.builder()
                     .date(consultationDataFromRequest.getDate())
@@ -98,7 +105,7 @@ public class DataManger {
 
     public ResponseEntity cancelConsultation(Long id) {
         try{
-            Consultation consultation = consultationRepository.findById(id).orElseThrow();
+            Consultation consultation = consultationRepository.findById(id).orElseThrow(() -> new ConsultationNotFoundException(id));
             consultationRepository.delete(consultation);
             return ResponseEntity.ok().body("Successful");
         } catch(Exception e){
@@ -134,13 +141,19 @@ public class DataManger {
     }
 
     public List<Consultation> getConsultationsAsParticipant(Long id) {
-        Optional<UserModel> user = userModelRepository.findById(id);
-        return user.map(value -> consultationRepository.findAll().stream().filter(consultation -> consultation.getParticipants().contains(value)).collect(Collectors.toList())).orElseGet(ArrayList::new);
+        UserModel user = userModelRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        return consultationRepository.findAll()
+                .stream()
+                .filter(consultation -> consultation.getParticipants().contains(user))
+                .collect(Collectors.toList());
     }
 
     public List<Consultation> getConsultationsAsHost(Long id) {
-        Optional<UserModel> user = userModelRepository.findById(id);
-        return user.map(value -> consultationRepository.findAll().stream().filter(consultation -> consultation.getHost().equals(user.get())).collect(Collectors.toList())).orElseGet(ArrayList::new);
+        UserModel user = userModelRepository.findById(id).orElseThrow(() -> new UserNotFoundException(id));
+        return consultationRepository.findAll()
+                .stream()
+                .filter(consultation -> consultation.getHost().equals(user))
+                .collect(Collectors.toList());
     }
 
     public List<Consultation> findArchivedConsultation() {

@@ -12,6 +12,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -19,6 +20,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @SpringBootApplication
+@EnableSwagger2
 public class CoolzontationsApplication {
 
     @Autowired
@@ -35,7 +37,7 @@ public class CoolzontationsApplication {
     }
 
     @Bean
-    @Profile("production")
+    @Profile("development")
     public CommandLineRunner init() {
         return args -> {
             UserModel userModel1 = UserModel.builder()
