@@ -1,6 +1,6 @@
 package com.codecool.coolzontations.controller.advice;
 
-import com.codecool.coolzontations.service.exceptions.UserIdNotFoundException;
+import com.codecool.coolzontations.service.exceptions.UserNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -8,9 +8,9 @@ import org.springframework.web.bind.annotation.*;
 public class UserIdNotFoundAdvice {
 
     @ResponseBody
-    @ExceptionHandler(UserIdNotFoundException.class)
+    @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    String userIdNotFoundHandler(UserIdNotFoundException exception){
+    String userIdNotFoundHandler(UserNotFoundException exception){
         return exception.getMessage();
     }
 }

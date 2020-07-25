@@ -1,6 +1,8 @@
 package com.codecool.coolzontations.controller.dto;
 
 import com.codecool.coolzontations.model.Subject;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,8 +17,10 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Component
+@ApiModel
 public class ConsultationDataFromRequest {
 
+    @ApiModelProperty(notes = "Start date of the consultation")
     private LocalDateTime date;
     private Long hostID;
     private Integer duration;

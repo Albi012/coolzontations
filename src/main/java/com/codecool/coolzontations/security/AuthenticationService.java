@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
-public class LoginAuth {
+public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
@@ -32,7 +32,7 @@ public class LoginAuth {
     @Autowired
     private UserDataService userDataService;
 
-    public LoginAuth(AuthenticationManager authenticationManager, JwtTokenService jwtTokenServices, UserModelRepository users) {
+    public AuthenticationService(AuthenticationManager authenticationManager, JwtTokenService jwtTokenServices, UserModelRepository users) {
         this.authenticationManager = authenticationManager;
         this.jwtTokenServices = jwtTokenServices;
     }
