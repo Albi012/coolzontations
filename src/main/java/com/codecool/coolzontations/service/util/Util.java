@@ -6,6 +6,7 @@ import com.codecool.coolzontations.model.Consultation;
 import com.codecool.coolzontations.model.UserModel;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -37,8 +38,10 @@ public class Util {
     }
 
     private Set<ResponseUserModel> userModelWrapper(Set<UserModel> userModels){
-        return userModels.stream()
-                .map(this::setUserProperties)
-                .collect(Collectors.toSet());
+        return userModels != null ?
+                userModels.stream()
+                    .map(this::setUserProperties)
+                    .collect(Collectors.toSet()) :
+                new HashSet<ResponseUserModel>();
     }
 }
