@@ -95,7 +95,7 @@ public class ConsultationDataService {
         return consultationRepository.findArchivedConsultations(date);
     }
 
-    public List<Consultation> findAllConsultation() {
+    public List<Consultation> findActiveConsultation() {
         LocalDateTime date = LocalDateTime.now();
         return consultationRepository.findActiveConsultations(date);
     }

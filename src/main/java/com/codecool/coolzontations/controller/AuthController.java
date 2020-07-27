@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @CrossOrigin
 @RestController
 @RequestMapping("/api/auth")
@@ -15,7 +17,7 @@ public class AuthController {
     private AuthenticationService authenticationService;
 
     @PostMapping("/sign-in")
-    public ResponseEntity signin(@RequestBody UserCredentials data) {
+    public ResponseEntity<Map<String,Object>> signin(@RequestBody UserCredentials data) {
         return authenticationService.authenticationValiadtion(data);
     }
 

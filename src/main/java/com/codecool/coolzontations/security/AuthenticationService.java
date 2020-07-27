@@ -3,7 +3,6 @@ package com.codecool.coolzontations.security;
 import com.codecool.coolzontations.controller.dto.UserCredentials;
 import com.codecool.coolzontations.model.UserModel;
 import com.codecool.coolzontations.repository.UserModelRepository;
-import com.codecool.coolzontations.service.ConsultationDataService;
 import com.codecool.coolzontations.service.UserDataService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,17 +35,17 @@ public class AuthenticationService {
         this.jwtTokenServices = jwtTokenServices;
     }
 
-    public ResponseEntity authenticationValiadtion(@RequestBody UserCredentials data) {
+    public ResponseEntity<Map<String,Object>> authenticationValiadtion(@RequestBody UserCredentials data) {
         try {
             String username = data.getUsername();
             String password = data.getPassword();
 
             Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-            List<String> roles = getUserRoles(authentication);
-            String token = jwtTokenServices.createToken(username, roles);
+            List<String> grantedAuthorities = getUserRoles(authentication);
+            String token = jwtTokenServices.createToken(username, grantedAuthorities);
             UserModel user = userDataService.findUserByUsername(username);
             Map<String, Object> userDetails = mapUserDetails(user);
-            Map<Object, Object> model = authModelBuilder(token, userDetails);
+            Map<String, Object> model = authModelBuilder(token, userDetails);
 
             return ResponseEntity.ok(model);
 
@@ -63,8 +61,8 @@ public class AuthenticationService {
                         .collect(Collectors.toList());
     }
 
-    private Map<Object, Object> authModelBuilder(String token, Map<String, Object> userDetails) {
-        Map<Object, Object> model = new HashMap<>();
+    private Map<String, Object> authModelBuilder(String token, Map<String, Object> userDetails) {
+        Map<String, Object> model = new HashMap<>();
         model.put("user", userDetails);
         model.put("token", token);
         return model;

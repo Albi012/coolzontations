@@ -6,6 +6,6 @@ import com.codecool.coolzontations.model.UserModel;
 
 public class UserNotParticipantException extends RuntimeException {
     public UserNotParticipantException(UserModel userModel, Consultation consultation) {
-        super("Participant does not applied to consultation" + userModel + consultation);
+        super("Participant does not applied to consultation! \n User: \n" + userModel.getUsername() + " \n Consultation: \n" + consultation);
     }
 }
